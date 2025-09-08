@@ -4,6 +4,7 @@ import LogoPic from "../assets/flower.png";
 
 function Header() {
   const [open, setOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <header className={styles.headerContainer}>
@@ -15,10 +16,27 @@ function Header() {
         />
         <h1 className={styles.logoName}>Bloom Watch</h1>
       </div>
-      <nav>
+
+      {/* Burger Menu Button */}
+      <button
+        className={styles.burgerMenu}
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        aria-label="Toggle menu"
+      >
+        <span className={`${styles.burgerLine} ${mobileMenuOpen ? styles.burgerLineOpen : ""}`}></span>
+        <span className={`${styles.burgerLine} ${mobileMenuOpen ? styles.burgerLineOpen : ""}`}></span>
+        <span className={`${styles.burgerLine} ${mobileMenuOpen ? styles.burgerLineOpen : ""}`}></span>
+      </button>
+
+      {/* Navigation */}
+      <nav className={`${styles.nav} ${mobileMenuOpen ? styles.navOpen : ""}`}>
         <ul className={styles.navList}>
-          <li className={styles.navItem}><a href="#">Home</a></li>
-          <li className={styles.navItem}><a href="#">Dashboard</a></li>
+          <li className={styles.navItem}>
+            <a href="#" onClick={() => setMobileMenuOpen(false)}>Home</a>
+          </li>
+          <li className={styles.navItem}>
+            <a href="#" onClick={() => setMobileMenuOpen(false)}>Dashboard</a>
+          </li>
           <li className={styles.navItem}>
             <button
               className={styles.dropdownBtn}
@@ -32,9 +50,9 @@ function Header() {
             {open && (
               <div className={styles.dropDownMenuContainer}>
                 <ul className={styles.dropDownMenu}>
-                  <li>Model 1</li>
-                  <li>Model 2</li>
-                  <li>Model 3</li>
+                  <li onClick={() => setMobileMenuOpen(false)}>Model 1</li>
+                  <li onClick={() => setMobileMenuOpen(false)}>Model 2</li>
+                  <li onClick={() => setMobileMenuOpen(false)}>Model 3</li>
                 </ul>
               </div>
             )}
