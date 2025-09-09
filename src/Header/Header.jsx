@@ -14,10 +14,9 @@ function Header() {
           src={LogoPic}
           className={styles.logoPic}
         />
-        <h1 className={styles.logoName}>Bloom Watch</h1>
+        <h1 className={styles.logoName}>Bee-yond Sights</h1>
       </div>
 
-      {/* Burger Menu Button */}
       <button
         className={styles.burgerMenu}
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -28,21 +27,14 @@ function Header() {
         <span className={`${styles.burgerLine} ${mobileMenuOpen ? styles.burgerLineOpen : ""}`}></span>
       </button>
 
-      {/* Navigation */}
       <nav className={`${styles.nav} ${mobileMenuOpen ? styles.navOpen : ""}`}>
         <ul className={styles.navList}>
-          <li className={styles.navItem}>
-            <a href="#" onClick={() => setMobileMenuOpen(false)}>Home</a>
-          </li>
-          <li className={styles.navItem}>
-            <a href="#" onClick={() => setMobileMenuOpen(false)}>Dashboard</a>
-          </li>
-          <li className={styles.navItem}>
+                    <li className={styles.navItem}>
             <button
               className={styles.dropdownBtn}
               onClick={() => setOpen(!open)}
             >
-              Predictions{" "}
+              Features{" "}
               <span className={`${styles.arrow} ${open ? styles.open : ""}`}>
                 ▼
               </span>
@@ -57,8 +49,20 @@ function Header() {
               </div>
             )}
           </li>
+          <li className={styles.navItem}>
+            <a href="#" onClick={() => setMobileMenuOpen(false)}>About</a>
+          </li>
+          <li className={styles.navItem}>
+            <a href="#" onClick={() => setMobileMenuOpen(false)}>Dashboard</a>
+          </li>
+          <li className={styles.navItem}>
+            <a href="#" onClick={() => setMobileMenuOpen(false)}>Data</a>
+          </li>
         </ul>
       </nav>
+      <button className={styles.APIButton}>
+        GET API
+      </button>
     </header>
   );
 }

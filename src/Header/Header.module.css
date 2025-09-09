@@ -1,10 +1,8 @@
 .headerContainer {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   padding: 0.5rem 2rem;
-  background-color: azure;
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
   position: relative;
 }
 
@@ -16,9 +14,9 @@
 }
 
 .logoName {
-  font-family: "Courier New", Courier, monospace;
-  color: hsl(266, 100%, 15%);
-  font-size: 1.5rem;
+  font-family: sans-serif;
+  color: hsl(0, 0%, 100%);
+  font-size: 2rem;
   font-weight: bold;
 }
 
@@ -28,7 +26,6 @@
   min-width: 40px;
 }
 
-/* Burger Menu Styles */
 .burgerMenu {
   display: none;
   flex-direction: column;
@@ -42,7 +39,7 @@
 .burgerLine {
   width: 25px;
   height: 3px;
-  background-color: hsl(266, 100%, 15%);
+  background-color: hsl(0, 0%, 100%);
   margin: 3px 0;
   transition: 0.3s;
   transform-origin: center;
@@ -77,20 +74,20 @@
 .navItem button {
   display: inline-block;
   text-decoration: none;
-  font-family: "Courier New", Courier, monospace;
-  color: hsl(266, 100%, 15%);
-  font-size: 1.5em;
-  font-weight: bold;
+  font-family: sans-serif;
+  color: hsl(0, 0%, 100%);
+  font-size: 1.2em;
   transition: color 0.2s, transform 0.2s, text-shadow 0.2s;
 }
 
 .navItem a:hover {
-  color: hsl(0, 0%, 0%);
+  color: hsl(0, 0%, 75%);
   transform: scale(1.2, 1.2);
 }
 
-.navItem a:active {
-  color: hsla(0, 0%, 0%, 0.6);
+.navItem a:active,
+.navItem button:active {
+  color: hsl(0, 0%, 80%);
 }
 
 .navItem button {
@@ -152,7 +149,16 @@
 .navItem {
   position: relative;
 }
-
+.APIButton{
+  background-image: none;
+  background-color: rgba(240, 255, 255, 0.432);
+  color: white;
+  padding: 15px 40px;
+  border-radius: 30px;
+  border: none;
+  text-align: center;
+  cursor: pointer;
+}
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
   .headerContainer {
@@ -203,17 +209,27 @@
   .navItem a,
   .navItem button {
     padding: 1rem 0;
+    color: black;
     font-size: 1.3em;
     width: 100%;
     text-align: left;
     justify-content: flex-start;
+    transition: 0.3s;
   }
 
   .navItem a:hover {
     transform: none;
-    background-color: rgba(203, 207, 255, 0.3);
+    color: hsl(266, 100%, 15%);
+    font-weight: bold;
+    padding-left: 1.8em;
+    background-color: rgb(203, 207, 255);
     padding-left: 0.5rem;
   }
+
+.navItem a:active,
+.navItem button:active {
+  color: hsl(0, 0%, 60%);
+}
 
   /* Adjust dropdown for mobile */
   .dropDownMenuContainer {
