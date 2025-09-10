@@ -33,11 +33,29 @@
 .cardText h3{
     font-size: 1.75rem;
 }
-.cardText h4{
+.cardText a{
     font-size: 1.5rem;
     cursor: pointer;
+    text-decoration: none;
+    color: white;
 }
 .cardText p{
     font-size: 1.25rem;
     margin: 1rem;
+}
+
+@media (max-width: 768px) {
+    .cardContainer{
+        width: 80%;
+    }
+    .cardText h3{
+        font-size: 1.1rem;
+    }
+    .cardText h4{
+        font-size: 0.9rem;
+    }
+    .cardText p{
+        font-size: 1rem;
+        margin: 1rem;
+    }
 }

@@ -8,7 +8,7 @@ function Card(props){
             <div className={styles.cardText}>
                 <h3>{props.title}</h3>
                 <p>{props.description}</p>
-                <h4>Learn More..</h4>
+                <h4><a href="#">Learn More..</a></h4>
             </div>
         </div>
 

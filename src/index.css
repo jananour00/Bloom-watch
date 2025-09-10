@@ -44,3 +44,10 @@ html {
   scrollbar-width: thin;
   scrollbar-color: #747474 #302e38;
 }
+
+@media (max-width: 768px) {
+  .cardsPage {
+    flex-direction: column;
+    gap: 2%;
+  }
+}
