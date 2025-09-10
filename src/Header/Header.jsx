@@ -9,11 +9,7 @@ function Header() {
   return (
     <header className={styles.headerContainer}>
       <div className={styles.logoContainer}>
-        <img
-          alt="Bloom Watch Logo"
-          src={LogoPic}
-          className={styles.logoPic}
-        />
+        <img alt="Bloom Watch Logo" src={LogoPic} className={styles.logoPic} />
         <h1 className={styles.logoName}>Bee-yond Sights</h1>
       </div>
 
@@ -22,14 +18,26 @@ function Header() {
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         aria-label="Toggle menu"
       >
-        <span className={`${styles.burgerLine} ${mobileMenuOpen ? styles.burgerLineOpen : ""}`}></span>
-        <span className={`${styles.burgerLine} ${mobileMenuOpen ? styles.burgerLineOpen : ""}`}></span>
-        <span className={`${styles.burgerLine} ${mobileMenuOpen ? styles.burgerLineOpen : ""}`}></span>
+        <span
+          className={`${styles.burgerLine} ${
+            mobileMenuOpen ? styles.burgerLineOpen : ""
+          }`}
+        ></span>
+        <span
+          className={`${styles.burgerLine} ${
+            mobileMenuOpen ? styles.burgerLineOpen : ""
+          }`}
+        ></span>
+        <span
+          className={`${styles.burgerLine} ${
+            mobileMenuOpen ? styles.burgerLineOpen : ""
+          }`}
+        ></span>
       </button>
 
       <nav className={`${styles.nav} ${mobileMenuOpen ? styles.navOpen : ""}`}>
         <ul className={styles.navList}>
-                    <li className={styles.navItem}>
+          <li className={styles.navItem}>
             <button
               className={styles.dropdownBtn}
               onClick={() => setOpen(!open)}
@@ -50,19 +58,23 @@ function Header() {
             )}
           </li>
           <li className={styles.navItem}>
-            <a href="#" onClick={() => setMobileMenuOpen(false)}>About</a>
+            <a href="#" onClick={() => setMobileMenuOpen(false)}>
+              About
+            </a>
           </li>
           <li className={styles.navItem}>
-            <a href="#" onClick={() => setMobileMenuOpen(false)}>Dashboard</a>
+            <a href="#" onClick={() => setMobileMenuOpen(false)}>
+              Dashboard
+            </a>
           </li>
           <li className={styles.navItem}>
-            <a href="#" onClick={() => setMobileMenuOpen(false)}>Data</a>
+            <a href="#" onClick={() => setMobileMenuOpen(false)}>
+              Data
+            </a>
           </li>
         </ul>
       </nav>
-      <button className={styles.APIButton}>
-        GET API
-      </button>
+      <button className={styles.APIButton}>GET API</button>
     </header>
   );
 }

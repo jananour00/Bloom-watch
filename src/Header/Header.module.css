@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 2rem;
+  padding: 1rem 2rem;
   position: relative;
 }
 
@@ -37,10 +37,9 @@
   transition: 0.5s;
 }
 
-.burgerMenu:hover{
-  background-color:rgba(240, 255, 255, 0.432);
+.burgerMenu:hover {
+  background-color: rgba(240, 255, 255, 0.432);
   border-radius: 5em;
-
 }
 
 .burgerLine {
@@ -91,10 +90,14 @@
   padding: 0.5em;
 }
 
+.navList li button {
+  padding: 0.5em;
+}
+
 .navItem a:hover {
   /* color: hsl(0, 0%, 75%); */
   transform: scale(1.2, 1.2);
-  background-color:rgba(240, 255, 255, 0.432);
+  background-color: rgba(240, 255, 255, 0.432);
   border-radius: 5em;
 }
 
@@ -162,7 +165,7 @@
 .navItem {
   position: relative;
 }
-.APIButton{
+.APIButton {
   background-image: none;
   background-color: rgba(240, 255, 255, 0.432);
   color: white;
@@ -239,10 +242,10 @@
     padding-left: 0.5rem;
   }
 
-.navItem a:active,
-.navItem button:active {
-  color: hsl(0, 0%, 60%);
-}
+  .navItem a:active,
+  .navItem button:active {
+    color: hsl(0, 0%, 60%);
+  }
 
   /* Adjust dropdown for mobile */
   .dropDownMenuContainer {
