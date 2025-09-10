@@ -1,8 +1,9 @@
 import Header from "./Header/Header.jsx"
 
 function App(){
-    return(
+    return(<div className="mainApp">
         <Header/>
+    </div>
     );
 }
 

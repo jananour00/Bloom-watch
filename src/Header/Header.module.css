@@ -166,8 +166,8 @@
   background-image: none;
   background-color: rgba(240, 255, 255, 0.432);
   color: white;
-  padding: 15px 40px;
-  border-radius: 30px;
+  padding: 1em 2em;
+  border-radius: 5em;
   border: none;
   text-align: center;
   cursor: pointer;
