@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 1rem 5rem;
   position: relative;
 }
 
@@ -14,9 +14,9 @@
 }
 
 .logoName {
-  font-family: sans-serif;
+  font-family: "Lekton", "sans-serif";
   color: hsl(0, 0%, 100%);
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: bold;
 }
 
@@ -78,12 +78,14 @@
 
 .navItem a,
 .navItem button {
+  font-family: Inter, sans-serif;
   display: inline-block;
   text-decoration: none;
   font-family: sans-serif;
   color: hsl(0, 0%, 100%);
   font-size: 1.2em;
-  transition: color 0.2s, transform 0.2s, text-shadow 0.2s;
+  transition: 0.2s;
+  border-radius: 5em;
 }
 
 .navItem a {
@@ -92,21 +94,6 @@
 
 .navList li button {
   padding: 0.5em;
-}
-
-.navItem a:hover {
-  /* color: hsl(0, 0%, 75%); */
-  transform: scale(1.2, 1.2);
-  background-color: rgba(240, 255, 255, 0.432);
-  border-radius: 5em;
-}
-
-.navItem a:active,
-.navItem button:active {
-  color: hsl(0, 0%, 80%);
-}
-
-.navItem button {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -115,10 +102,19 @@
   gap: 0.25rem;
 }
 
-/* Arrow styles */
+.navItem a:hover {
+  transform: scale(1.2, 1.2);
+  background-color: rgba(240, 255, 255, 0.45);
+}
+
+.navItem a:active,
+.navItem button:active {
+  color: hsl(0, 0%, 80%);
+}
+
 .arrow {
   display: inline-block;
-  transition: transform 0.3s ease;
+  transition: 0.3s ease;
 }
 
 .arrow.open {
@@ -166,8 +162,9 @@
   position: relative;
 }
 .APIButton {
+  font-family: Inter, sans-serif;
   background-image: none;
-  background-color: rgba(240, 255, 255, 0.432);
+  background-color: rgba(240, 255, 255, 0.45);
   color: white;
   padding: 1em 2em;
   border-radius: 5em;
@@ -225,6 +222,7 @@
   .navItem a,
   .navItem button {
     padding: 1rem 0;
+    border-radius: 0;
     color: black;
     font-size: 1.3em;
     width: 100%;
