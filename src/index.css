@@ -3,8 +3,6 @@
   margin: 0;
 }
 
-body {
-}
 
 .mainApp {
   background-image: url("../src/assets/bg.png");
@@ -12,4 +10,27 @@ body {
   background-repeat: no-repeat;
   background-position: center;
   background-size:100% 105%;
+}
+::-webkit-scrollbar {
+  width: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: #2d3748;
+  border-radius: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4a5568;
+  border-radius: 7px;
+  border: 2px solid #2d3748;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #718096;
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #47474a #f1f1f1;
 }
