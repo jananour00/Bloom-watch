@@ -1,0 +1,283 @@
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 5rem;
+  position: relative;
+}
+
+.headerContainer a{
+  text-decoration: none;
+}
+
+.logoContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logoName {
+  font-family: "Lekton", "sans-serif";
+  color: hsl(0, 0%, 100%);
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+
+.logoPic {
+  width: 15%;
+  max-width: 80px;
+  min-width: 40px;
+}
+
+.burgerMenu {
+  display: none;
+  flex-direction: column;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  z-index: 1001;
+  transition: 0.5s;
+}
+
+.burgerMenu:hover {
+  background-color: rgba(240, 255, 255, 0.432);
+  border-radius: 5em;
+}
+
+.burgerLine {
+  width: 25px;
+  height: 3px;
+  background-color: hsl(0, 0%, 100%);
+  margin: 3px 0;
+  transition: 0.3s;
+  transform-origin: center;
+}
+
+.burgerLineOpen:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.burgerLineOpen:nth-child(2) {
+  opacity: 0;
+}
+
+.burgerLineOpen:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Navigation Styles */
+.nav {
+  display: block;
+}
+
+.navList {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+.navItem a,
+.navItem button {
+  font-family: Inter, sans-serif;
+  display: inline-block;
+  font-family: sans-serif;
+  color: hsl(0, 0%, 100%);
+  font-size: 1.2em;
+  transition: 0.2s;
+  border-radius: 5em;
+}
+
+.navItem a {
+  padding: 0.5em;
+}
+
+.navList li button {
+  padding: 0.5em;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.navItem a:hover {
+  transform: scale(1.2, 1.2);
+  background-color: rgba(240, 255, 255, 0.45);
+}
+
+.navItem a:active,
+.navItem button:active {
+  color: hsl(0, 0%, 80%);
+}
+
+.arrow {
+  display: inline-block;
+  transition: 0.3s ease;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
+}
+
+/* Dropdown menu styles */
+.dropDownMenuContainer {
+  position: absolute;
+  width: 100%;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  margin-top: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.dropDownMenu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.dropDownMenu li {
+  padding: 1.5em 1.3em;
+  cursor: pointer;
+  border-color: rgb(255, 255, 255);
+  transition: 0.3s;
+}
+
+.dropDownMenu li:not(:last-child) {
+  border-bottom: 1px solid #ddd;
+}
+
+.dropDownMenu li:hover {
+  color: hsl(266, 100%, 15%);
+  font-weight: bold;
+  padding-left: 1.8em;
+  background-color: rgb(203, 207, 255);
+}
+
+.navItem {
+  position: relative;
+}
+.APIButton {
+  font-family: Inter, sans-serif;
+  background-image: none;
+  background-color: rgba(240, 255, 255, 0.45);
+  color: white;
+  padding: 1em 2em;
+  border-radius: 5em;
+  border: none;
+  text-align: center;
+  cursor: pointer;
+}
+
+.ActiveLink{
+  background-color: rgb(68, 51, 54);
+}
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .headerContainer {
+    padding: 0.5rem 1rem;
+  }
+
+  .logoName {
+    font-size: 1.2rem;
+  }
+
+  /* Show burger menu on mobile */
+  .burgerMenu {
+    display: flex;
+  }
+
+  /* Hide nav by default on mobile */
+  .nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: azure;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+
+  /* Show nav when open */
+  .navOpen {
+    display: block;
+  }
+
+  .navList {
+    flex-direction: column;
+    gap: 0;
+    padding: 1rem;
+  }
+
+  .navItem {
+    width: 100%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .navItem:last-child {
+    border-bottom: none;
+  }
+
+  .navItem a,
+  .navItem button {
+    padding: 1rem 0;
+    border-radius: 0;
+    color: black;
+    font-size: 1.3em;
+    width: 100%;
+    text-align: left;
+    justify-content: flex-start;
+    transition: 0.3s;
+  }
+
+  .navItem a:hover {
+    transform: none;
+    color: hsl(266, 100%, 15%);
+    font-weight: bold;
+    padding-left: 1.8em;
+    background-color: rgb(203, 207, 255);
+    padding-left: 0.5rem;
+  }
+
+  .navItem a:active,
+  .navItem button:active {
+    color: hsl(0, 0%, 60%);
+  }
+
+  /* Adjust dropdown for mobile */
+  .dropDownMenuContainer {
+    position: static;
+    width: 100%;
+    margin-top: 0.5rem;
+    margin-left: 1rem;
+    box-shadow: inset 2px 0 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .dropDownMenu li {
+    padding: 1rem 1.5rem;
+    font-size: 1.1em;
+  }
+
+  .dropDownMenu li:hover {
+    padding-left: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logoName {
+    font-size: 1rem;
+  }
+
+  .navItem a,
+  .navItem button {
+    font-size: 1.1em;
+  }
+}

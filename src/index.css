@@ -3,24 +3,6 @@
   margin: 0;
 }
 
-
-.mainApp {
-  background-image: url("../src/assets/bg.jpg");
-  height: 100vh;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-attachment: fixed;
-  background-size:100% 105%;
-}
-
-.cardsPage{
-  min-height: 100vh;
-  background-image: linear-gradient(to right,#171628, #242335);
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
 ::-webkit-scrollbar {
   width: 14px;
 }
@@ -43,12 +25,4 @@
 html {
   scrollbar-width: thin;
   scrollbar-color: #747474 #302e38;
-}
-
-@media (max-width: 768px) {
-  .cardsPage {
-    flex-direction: column;
-    gap: 5em;
-    padding: 3em 0;
-  }
 }
