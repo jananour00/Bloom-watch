@@ -17,8 +17,8 @@ function Dashboard(){
                     <InfoCard title={"Prediction Acurracy"} data={"90 %"}/>                    
                 </div>
                 <div className={styles.earthMap}>
-                    {/* <Earth/> */}
-                    <img src="./src\assets\worldmap.png" alt="earth map"/>
+                    <Earth/>
+                    {/* <img src="./src\assets\worldmap.png" alt="earth map"/> */}
                 </div>
                 <form className={styles.filtersContainer}>
                     <input type="text"></input>

@@ -1,89 +1,53 @@
 import * as THREE from "three";
-import { useEffect, useRef } from "react";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import worldMapTexture from "../../assets/worldmap.png";
+import { useRef } from "react";
+import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { OrbitControls, useTexture } from "@react-three/drei";
+import worldMapTexture from "../../assets/test.png";
 
+// This component contains the actual 3D object.
+function EarthMesh() {
+  const meshRef = useRef();
+  
+  // useTexture is a hook from 'drei' that simplifies loading textures.
+  const texture = useTexture(worldMapTexture);
+
+  // useFrame is a hook that runs on every rendered frame.
+  useFrame(() => {
+    if (meshRef.current) {
+      // This is the animation loop
+      meshRef.current.rotation.y += 0.001;
+    }
+  });
+
+  return (
+    <mesh ref={meshRef} rotation-z={THREE.MathUtils.degToRad(23.5)}>
+      <sphereGeometry args={[1, 64, 64]} />
+      {/* R3F automatically handles cleanup for geometry and materials */}
+      <meshStandardMaterial map={texture} />
+    </mesh>
+  );
+}
+
+// This is your main component that sets up the scene.
 function Earth() {
-  const mountRef = useRef(null);
-
-  useEffect(() => {
-    // Keep a reference to the mount point to avoid issues during cleanup
-    const currentMount = mountRef.current;
-    
-    // Guard against the ref not being available
-    if (!currentMount) return;
-
-    const w = currentMount.clientWidth;
-    const h = currentMount.clientHeight;
-
-    // Scene
-    const scene = new THREE.Scene();
-
-    // Camera
-    const camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 20);
-    camera.position.z = 2;
-
-    // Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(w, h);
-    currentMount.appendChild(renderer.domElement);
-
-    // Controls
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.maxDistance = 10;
-    controls.minDistance = 1.25;
-
-    // Texture
-    const loader = new THREE.TextureLoader();
-    // FIX for Issue #2: Load from the /public folder
-    const textureMap = loader.load("../../assets/worldmap.png"); 
-
-    // Earth
-    const earthGeometry = new THREE.SphereGeometry(1, 64, 64);
-    const earthMaterial = new THREE.MeshStandardMaterial({ map: textureMap });
-    const earthMesh = new THREE.Mesh(earthGeometry, earthMaterial);
-    earthMesh.rotation.z = THREE.MathUtils.degToRad(23.5);
-    scene.add(earthMesh);
-
-    // Light
-    const sunLight = new THREE.DirectionalLight(0xe3f1ff, 1.0);
-    sunLight.position.set(0, 0, 10);
-    scene.add(sunLight);
-
-    // FIX for Issue #3: Handle window resizing
-    const handleResize = () => {
-      const newW = currentMount.clientWidth;
-      const newH = currentMount.clientHeight;
-      renderer.setSize(newW, newH);
-      camera.aspect = newW / newH;
-      camera.updateProjectionMatrix();
-    };
-    window.addEventListener('resize', handleResize);
-
-    // Animation
-    const animate = () => {
-      requestAnimationFrame(animate);
-      earthMesh.rotation.y += 0.001;
-      controls.update();
-      renderer.render(scene, camera);
-    };
-    animate();
-
-    // FIX for Issue #1: Robust cleanup function
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      if (currentMount) {
-        currentMount.removeChild(renderer.domElement);
-      }
-      // Dispose of Three.js objects to free up GPU memory
-      renderer.dispose();
-      earthGeometry.dispose();
-      earthMaterial.dispose();
-      textureMap.dispose();
-    };
-  }, []); // Empty dependency array ensures this runs only once
-
-  return <div ref={mountRef} style={{ width: "100%", height: "100%" }} />;
+  return (
+    <div style={{ width: "100%", height: "60vh" }}>
+      <Canvas>
+        {/* The Canvas component sets up the scene, camera, and renderer */}
+        <ambientLight intensity={0.2} />
+        <directionalLight color={0xe3f1ff} position={[0, 0, 10]} intensity={1.0} />
+        
+        <EarthMesh />
+        
+        {/* OrbitControls is a ready-made component in 'drei' */}
+        <OrbitControls 
+          enableZoom={true} 
+          minDistance={1.25} 
+          maxDistance={10} 
+        />
+      </Canvas>
+    </div>
+  );
 }
 
 export default Earth;

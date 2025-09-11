@@ -4,6 +4,7 @@
   align-items: center;
   padding: 1rem 5rem;
   position: relative;
+  gap: 0.8em;
 }
 
 .headerContainer a{
@@ -47,7 +48,7 @@
 }
 
 .burgerLine {
-  width: 25px;
+  width: 2em;
   height: 3px;
   background-color: hsl(0, 0%, 100%);
   margin: 3px 0;
