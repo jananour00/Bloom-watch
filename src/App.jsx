@@ -1,5 +1,4 @@
 import Header from "./Header/Header.jsx"
-import Land from "./features/land.jsx"
 import Card from "./Card/Card.jsx";
 function App(){
     return(
