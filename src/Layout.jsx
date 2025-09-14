@@ -5,11 +5,11 @@ function Layout(){
     return(
         <>
             <Header/>
-            <main>
+            <main style={{margin: "0"}}>
                 <Outlet/>
             </main>
         </>
     );
 }
 
-export default Layout
+export default Layout;

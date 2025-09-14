@@ -8,7 +8,7 @@ function Dashboard(){
     return(
         <>
             <div className={styles.homeContainer}>
-                <Header/>
+                {/* <Header/> */}
                 <h1>DashBoard</h1>
                 <div className={styles.cardsContainer}>
                     <InfoCard title={"Total Blooming Events"} data={"7,265"}/>

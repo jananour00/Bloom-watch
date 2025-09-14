@@ -1,7 +1,11 @@
 .homeContainer {
   background-image: linear-gradient(to right,#171628, #242335);
+  position: absolute;
+  top: 0;
+  left: 0;
   min-height: 100vh;
   max-height: 250vh;
+  width: 100vw;
 }
 .homeContainer > h1{
     color: white;
@@ -20,9 +24,9 @@
 }
 
 .earthMap{
-    width: 95%;
+    width: 60%;
     margin: auto;
-    border: 1px solid black;
+    border: 1px solid rgb(255, 255, 255);
     border-radius: 1rem;
     margin-top: 10%;
 }
