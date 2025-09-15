@@ -9,7 +9,7 @@ function Header() {
 
   return (
     <header className={styles.headerContainer}>
-      <NavLink to="/">
+      <NavLink className={styles.headerContaine} to="/">
         <div className={styles.logoContainer}>
           <img alt="Bloom Watch Logo" src={LogoPic} className={styles.logoPic} />
           <h1 className={styles.logoName}>Bee-yond Sights</h1>

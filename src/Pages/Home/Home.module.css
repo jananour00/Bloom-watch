@@ -7,7 +7,7 @@
 
 /* base landing style — every landing should include this class */
 .landing {
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   scroll-snap-align: start;
   padding-top: calc(var(--header-height));
