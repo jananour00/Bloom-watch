@@ -27,6 +27,20 @@ const TypewriterText = ({ text, speed = 100, startDelay = 500 }) => {
     return () => clearTimeout(typingTimer);
   }, [currentIndex, isTyping, text, speed]);
 
+  useEffect(() => {
+    const restartInterval = setInterval(() => {
+      setCurrentIndex(0);
+      setDisplayedText('');
+      setIsTyping(false);
+      
+      setTimeout(() => {
+        setIsTyping(true);
+      }, 500);
+    }, 10000);
+
+    return () => clearInterval(restartInterval);
+  }, []);
+
   return (
     <span className="typewriter-container">
       {displayedText}
