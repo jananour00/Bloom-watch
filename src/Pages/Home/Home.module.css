@@ -21,8 +21,8 @@
 .homeLanding {
   composes: landing;
   background-image:
-    linear-gradient(rgba(60, 43, 76, 0.35), rgba(60, 43, 76, 0.35)),
-    url("../src/assets/bg.jpg");
+  linear-gradient(rgba(60, 43, 76, 0.35), rgba(60, 43, 76, 0.35)),
+  url("../src/assets/bg.jpg");
   background-repeat: no-repeat;
   background-position: center;
   background-attachment: fixed;
