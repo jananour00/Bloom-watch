@@ -20,12 +20,18 @@
 
 .homeLanding {
   composes: landing;
-  background-image: url("../src/assets/bg.jpg");
+  background-image:
+    linear-gradient(rgba(60, 43, 76, 0.35), rgba(60, 43, 76, 0.35)),
+    url("../src/assets/bg.jpg");
   background-repeat: no-repeat;
   background-position: center;
   background-attachment: fixed;
   background-size: cover;
-  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .homeLanding h2 {
@@ -34,6 +40,12 @@
   font-family: Righteous;
   font-size: 8rem;
   font-weight: 400;
+  text-shadow:
+    2px 2px 4px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(60, 43, 76, 0.5),
+    0 0 40px rgba(60, 43, 76, 0.3);
+  letter-spacing: 2px;
+  line-height: 1.1;
 }
 
 .homeLanding p {
@@ -41,33 +53,324 @@
   font-family: Righteous;
   font-size: 2rem;
   font-weight: 100;
+  text-shadow:
+    1px 1px 3px rgba(0, 0, 0, 0.8),
+    0 0 15px rgba(60, 43, 76, 0.4);
+  letter-spacing: 1px;
+  line-height: 1.4;
+  opacity: 0.95;
 }
 
 .cardsLanding {
   composes: landing;
-  background-image: linear-gradient(to right, #171628, #242335);
+  background: #f8f9fa;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   text-align: center;
+  position: relative;
+  padding: 5rem 2rem;
+}
+
+.cardsLanding::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(164, 28, 108, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(160, 36, 131, 0.03) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .cardsLanding h2 {
-  color: white;
-  font-family: Righteous;
-  font-size: 2rem;
-  font-weight: 100;
+  font-family: 'Inter', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 4rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 1;
+}
+
+.cardsLanding h2::after {
+  content: '';
+  position: absolute;
+  bottom: -1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(135deg, #A41C6C 0%, #A02483 100%);
+  border-radius: 2px;
 }
 
 .cardsContainer {
   flex: 1;
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  gap: 3em;
+  justify-content: center;
+  align-items: stretch;
+  gap: 4rem;
   flex-wrap: wrap;
   width: 100%;
+  max-width: 1400px;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.storyLanding {
+  composes: landing;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 30%, #16213e 70%, #0f3460 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  padding: 4rem 2rem;
+}
+
+.storyLanding::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(164, 28, 108, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(160, 36, 131, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(15, 52, 96, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.storyContent {
+  max-width: 1200px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.storyTitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 4rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 2rem;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(164, 28, 108, 0.2);
+  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.storySubtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 4rem;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.earthMapContainer {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 4rem auto;
+  border-radius: 2rem;
+  overflow: hidden;
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 50px rgba(164, 28, 108, 0.1);
+}
+
+.earthMap {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.earthMapContainer:hover .earthMap {
+  transform: scale(1.05);
+}
+
+.mapOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(164, 28, 108, 0.1) 0%, rgba(160, 36, 131, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.earthMapContainer:hover .mapOverlay {
+  opacity: 1;
+}
+
+.bloomIndicator {
+  position: absolute;
+  top: 30%;
+  left: 40%;
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle, #A41C6C 0%, #A02483 100%);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+  box-shadow: 0 0 20px rgba(164, 28, 108, 0.6);
+}
+
+.storyCtaBtn {
+  background: linear-gradient(135deg, #A41C6C 0%, #A02483 100%);
+  border: 2px solid transparent;
+  border-radius: 3rem;
+  padding: 1.25rem 3rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 8px 25px rgba(164, 28, 108, 0.3),
+    0 4px 15px rgba(164, 28, 108, 0.2);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.02em;
+  position: relative;
+  overflow: hidden;
+}
+
+.storyCtaBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s;
+}
+
+.storyCtaBtn:hover {
+  background: linear-gradient(135deg, #A02483 0%, #A41C6C 100%);
+  box-shadow:
+    0 12px 35px rgba(164, 28, 108, 0.4),
+    0 6px 20px rgba(164, 28, 108, 0.3);
+  transform: translateY(-3px) scale(1.05);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.storyCtaBtn:hover::before {
+  left: 100%;
+}
+
+.ctaArrow {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.storyCtaBtn:hover .ctaArrow {
+  transform: translateX(8px);
+}
+
+.featuresLanding {
+  composes: landing;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  position: relative;
+  padding: 5rem 2rem;
+}
+
+.featuresLanding::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(164, 28, 108, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 70% 80%, rgba(160, 36, 131, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(15, 52, 96, 0.03) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.featuresLanding h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 2rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 1;
+}
+
+.featuresLanding h2::after {
+  content: '';
+  position: absolute;
+  bottom: -1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(135deg, #A41C6C 0%, #A02483 100%);
+  border-radius: 2px;
+  box-shadow: 0 2px 10px rgba(164, 28, 108, 0.3);
+}
+
+.featuresSubtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: #4a5568;
+  margin-bottom: 4rem;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  text-shadow: none;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.featuresContainer {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 1600px;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .tempLanding {
@@ -78,10 +381,134 @@
   justify-content: center;
 }
 
+/* Enhanced animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+}
+
+.storyTitle,
+.storySubtitle,
+.earthMapContainer,
+.storyCtaBtn,
+.featuresLanding h2,
+.cardsLanding h2 {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.featuresContainer,
+.cardsContainer {
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
 @media (max-width: 768px) {
+  .cardsLanding,
+  .featuresLanding {
+    padding: 3rem 1rem;
+  }
+
+  .storyLanding {
+    padding: 3rem 1rem;
+  }
+
+  .featuresContainer,
   .cardsContainer {
     flex-direction: column;
-    gap: 5em;
-    padding: 3em 0;
+    gap: 2.5rem;
+    padding: 0 1rem;
+    align-items: center;
+  }
+
+  .storyTitle {
+    font-size: 2.5rem;
+  }
+
+  .storySubtitle {
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+  }
+
+  .earthMap {
+    height: 300px;
+  }
+
+  .storyCtaBtn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+  }
+
+  .featuresLanding h2,
+  .cardsLanding h2 {
+    font-size: 2.8rem;
+    margin-bottom: 3rem;
+  }
+
+  .featuresLanding h2::after,
+  .cardsLanding h2::after {
+    width: 60px;
+    height: 3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .storyLanding {
+    padding: 2.5rem 0.5rem;
+  }
+
+  .storyTitle {
+    font-size: 2rem;
+  }
+
+  .storySubtitle {
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .earthMap {
+    height: 250px;
+  }
+
+  .storyCtaBtn {
+    padding: 0.875rem 1.75rem;
+    font-size: 1rem;
+  }
+
+  .featuresLanding,
+  .cardsLanding {
+    padding: 2.5rem 0.5rem;
+  }
+
+  .featuresLanding h2,
+  .cardsLanding h2 {
+    font-size: 2.2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .featuresContainer,
+  .cardsContainer {
+    padding: 0 0.5rem;
+    gap: 2rem;
+  }
+
+  .featuresLanding h2::after,
+  .cardsLanding h2::after {
+    width: 50px;
   }
 }

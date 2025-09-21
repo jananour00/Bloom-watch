@@ -12,9 +12,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 3rem;
+  padding: 0 2rem;
   /* gap: 0.8em; */
   z-index: 1000;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 20px rgba(164, 28, 108, 0.15);
+  border-bottom: 1px solid rgba(164, 28, 108, 0.2);
 }
 
 .headerContainer a {
@@ -29,14 +33,23 @@
 }
 
 .logoName {
-  font-family: "Lekton", "sans-serif";
-  color: hsl(0, 0%, 100%);
-  font-size: 1.75rem;
-  font-weight: bold;
+  font-family: "Lekton", sans-serif;
+  color: #A41C6C;
+  font-size: 1.5rem;
+  font-weight: 400;
+  text-shadow:
+    1px 1px 2px rgba(164, 28, 108, 0.1),
+    0 0 8px rgba(164, 28, 108, 0.1);
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
 }
 
-.logoPic {
-  width: 40px;
+.logoName:hover {
+  transform: scale(1.05);
+  text-shadow:
+    1px 1px 4px rgba(164, 28, 108, 0.2),
+    0 0 12px rgba(164, 28, 108, 0.2),
+    0 0 20px rgba(164, 28, 108, 0.1);
 }
 
 .burgerMenu {
@@ -51,14 +64,14 @@
 }
 
 .burgerMenu:hover {
-  background-color: rgba(240, 255, 255, 0.432);
+  background-color: rgba(164, 28, 108, 0.1);
   border-radius: 5em;
 }
 
 .burgerLine {
   width: 2em;
   height: 3px;
-  background-color: hsl(0, 0%, 100%);
+  background-color: #A41C6C;
   margin: 3px 0;
   transition: 0.3s;
   transform-origin: center;
@@ -79,33 +92,39 @@
 /* Navigation Styles */
 .nav {
   display: block;
+  margin-left: auto;
 }
 
 .navList {
   list-style: none;
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   margin: 0;
   padding: 0;
 }
 
 .navItem a,
 .navItem button {
-  font-family: Inter, sans-serif;
+  font-family: "Roboto", "Open Sans", "Helvetica Neue", sans-serif;
   display: inline-block;
-  font-family: sans-serif;
-  color: hsl(0, 0%, 100%);
-  font-size: 1.2em;
-  transition: 0.2s;
+  color: #A41C6C;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 5em;
+  text-shadow:
+    0 0 4px rgba(164, 28, 108, 0.1);
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
 }
 
 .navItem a {
-  padding: 0.5em;
+  padding: 0.4em 0.8em;
 }
 
 .navList li button {
-  padding: 0.5em;
+  padding: 0.4em 0.8em;
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -115,13 +134,35 @@
 }
 
 .navItem a:hover {
-  transform: scale(1.2, 1.2);
-  background-color: rgba(240, 255, 255, 0.45);
+  transform: translateY(-2px) scale(1.05);
+  background: linear-gradient(135deg, rgba(164, 28, 108, 0.15), rgba(160, 36, 131, 0.1));
+  box-shadow:
+    0 4px 15px rgba(164, 28, 108, 0.2),
+    0 0 20px rgba(164, 28, 108, 0.1);
+  text-shadow:
+    0 0 6px rgba(164, 28, 108, 0.2),
+    0 0 12px rgba(164, 28, 108, 0.2),
+    0 0 18px rgba(164, 28, 108, 0.1);
+}
+
+.navItem a:hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(164, 28, 108, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.navItem a:hover::before {
+  left: 100%;
 }
 
 .navItem a:active,
 .navItem button:active {
-  color: hsl(0, 0%, 80%);
+  color: #A02483;
 }
 
 .arrow {
@@ -138,10 +179,10 @@
   position: absolute;
   width: 100%;
   background: white;
-  border: 1px solid #ddd;
+  border: 1px solid rgba(164, 28, 108, 0.2);
   border-radius: 0.25rem;
   margin-top: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 6px rgba(164, 28, 108, 0.15);
   z-index: 1000;
 }
 
@@ -160,34 +201,25 @@
 }
 
 .dropDownMenu li:not(:last-child) {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid rgba(164, 28, 108, 0.1);
 }
 
 .dropDownMenu li:hover {
-  color: hsl(266, 100%, 15%);
+  color: white;
   font-weight: bold;
   padding-left: 1.8em;
-  background-color: rgb(203, 207, 255);
+  background-color: #A41C6C;
 }
 
 .navItem {
   position: relative;
 }
-.APIButton {
-  font-family: Inter, sans-serif;
-  background-image: none;
-  background-color: rgba(240, 255, 255, 0.45);
-  color: white;
-  padding: 1em 4em;
-  border-radius: 5em;
-  border: none;
-  text-align: center;
-  cursor: pointer;
-}
 
 .ActiveLink {
-  background-color: rgb(68, 51, 54);
+  background-color: rgba(164, 28, 108, 0.2);
+  color: #A02483;
 }
+
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
   .headerContainer {
@@ -210,8 +242,8 @@
     top: 100%;
     left: 0;
     width: 100%;
-    background-color: azure;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 6px rgba(164, 28, 108, 0.15);
     z-index: 1000;
   }
 
@@ -228,7 +260,7 @@
 
   .navItem {
     width: 100%;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(164, 28, 108, 0.1);
   }
 
   .navItem:last-child {
@@ -239,7 +271,7 @@
   .navItem button {
     padding: 1rem 0;
     border-radius: 0;
-    color: black;
+    color: #A41C6C;
     font-size: 1.3em;
     width: 100%;
     text-align: left;
@@ -249,16 +281,16 @@
 
   .navItem a:hover {
     transform: none;
-    color: hsl(266, 100%, 15%);
+    color: white;
     font-weight: bold;
     padding-left: 1.8em;
-    background-color: rgb(203, 207, 255);
+    background-color: #A41C6C;
     padding-left: 0.5rem;
   }
 
   .navItem a:active,
   .navItem button:active {
-    color: hsl(0, 0%, 60%);
+    color: #A02483;
   }
 
   /* Adjust dropdown for mobile */
@@ -267,7 +299,7 @@
     width: 100%;
     margin-top: 0.5rem;
     margin-left: 1rem;
-    box-shadow: inset 2px 0 4px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 2px 0 4px rgba(164, 28, 108, 0.1);
   }
 
   .dropDownMenu li {
@@ -278,8 +310,9 @@
   .dropDownMenu li:hover {
     padding-left: 2rem;
   }
+
   .ActiveLink {
-    background-color: rgba(70, 55, 60, 0.3);
+    background-color: rgba(164, 28, 108, 0.2);
   }
 }
 
