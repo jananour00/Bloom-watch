@@ -23,6 +23,13 @@ export default function Heatmap({ points = [], options = {} }) {
       blur: 0,
       minZoom: 0,
       maxZoom: 0,
+      gradient: {
+        0.2: 'pink',
+        0.4: 'lightpink',
+        0.6: 'hotpink',
+        0.8: 'deeppink',
+        1.0: 'magenta'
+      },
       ...options
     }).addTo(map);
 

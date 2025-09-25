@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
-import { MapContainer, TileLayer, LayersControl, CircleMarker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, LayersControl, CircleMarker } from "react-leaflet";
 import Heatmap from "./Heatmap";
 import styles from "./Map.module.css";
 import "leaflet/dist/leaflet.css";
@@ -14,6 +14,8 @@ function Map({ bloomEvents = [] , animate = false}) {
 
   // optional simple pulsing animation: vary value between 0.5 and 1.5
   const [points, setPoints] = useState(basePoints);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
     setPoints(basePoints);
   }, [basePoints]);
@@ -61,12 +63,26 @@ function Map({ bloomEvents = [] , animate = false}) {
           center={Event.geoCode}
           radius={40}
           pathOptions={{ opacity: 0, fillOpacity: 0 }}
-        >
-          <Popup>
-            🌸 Bloom event: {Event.text}
-          </Popup>
-        </CircleMarker>
+          eventHandlers={{
+            click: () => {
+              setSelectedEvent(Event);
+              setIsModalOpen(true);
+            },
+          }}
+        />
       ))}
+
+      {isModalOpen && selectedEvent && (
+        <div className={styles['modal-overlay']} onClick={() => setIsModalOpen(false)}>
+          <div className={styles['modal-content']} onClick={(e) => e.stopPropagation()}>
+            <h2>🌸 Bloom Event</h2>
+            <p><strong>Details:</strong> {selectedEvent.text}</p>
+            <p><strong>Location:</strong> {selectedEvent.geoCode.join(', ')}</p>
+            {selectedEvent.value && <p><strong>Value:</strong> {selectedEvent.value}</p>}
+            <button className={styles['close-button']} onClick={() => setIsModalOpen(false)}>Close</button>
+          </div>
+        </div>
+      )}
 
     </MapContainer>
   );

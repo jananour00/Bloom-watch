@@ -1,0 +1,130 @@
+.storytellingWrapper {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #f0f8ff, #e6f3ff);
+  font-family: 'Arial', sans-serif;
+}
+
+.introSection {
+  padding: 4rem 2rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.title {
+  font-size: 3rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  color: #7f8c8d;
+  margin-bottom: 2rem;
+}
+
+.cardsContainer {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.climateSection,
+.vegetationSection,
+.bloomsSection,
+.predictionsSection,
+.ndviSection,
+.multiSection,
+.seasonalSection,
+.heatmapSection,
+.mapSection,
+.forecastSection,
+.cumulativeSection,
+.alertsSection,
+.climateDataSection {
+  padding: 4rem 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  margin: 2rem auto;
+  max-width: 1400px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sectionTitle {
+  font-size: 2.5rem;
+  color: #34495e;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.analysisNote {
+  background: #e8f4fd;
+  padding: 1rem;
+  border-left: 5px solid #3498db;
+  margin: 1rem 0;
+  font-style: italic;
+  color: #2c3e50;
+}
+
+.chartMapContainer {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.chartContainer,
+.mapContainer {
+  flex: 1;
+  min-width: 400px;
+}
+
+.chartGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.alert {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  padding: 1rem;
+  border-radius: 5px;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.alert h3 {
+  color: #856404;
+  margin: 0 0 0.5rem 0;
+}
+
+.summary {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 5px;
+  margin-top: 1rem;
+  font-weight: bold;
+  color: #495057;
+}
+
+@media (max-width: 768px) {
+  .cardsContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .chartMapContainer {
+    flex-direction: column;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .sectionTitle {
+    font-size: 2rem;
+  }
+}

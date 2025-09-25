@@ -1,39 +1,43 @@
-# Home Page Hero Section Enhancement Plan
+# TODO: Integrate NASA APIs and Visualizations for Bloom-Watch
 
-## Current Status: In Progress
+## Step 1: Update Dependencies
+- [x] Add 'plotly' to backend/requirements.txt for potential backend chart generation.
 
-### ✅ Completed Tasks:
-- [ ] Add Google Fonts import for Righteous font
-- [ ] Enhance hero section styling with color overlay and professional effects
-- [ ] Improve navigation bar font size and styling
-- [ ] Add professional UI enhancements (shadows, gradients, modern effects)
+## Step 2: Update Backend (app.py)
+- [x] Fix CSV path to "NDVI_TimeSeries_CentralValley (2).csv".
+- [x] Create 'date' column from month/year in NDVI CSV.
+- [x] Add /climate endpoint to fetch daily climate data from NASA POWER API.
+- [x] Add /data endpoint to return NDVI historical data as JSON.
+- [x] Enhance /predict endpoint to accept climate inputs for better forecasts.
+- [x] Add /ndvi endpoint to fetch NDVI data from NASA POWER API.
+- [x] Add /evi endpoint to fetch EVI data from NASA POWER API.
+- [x] Add /soil_moisture endpoint to fetch soil moisture from NASA POWER API.
+- [x] Add /chart endpoint to generate Plotly chart for NDVI and return HTML.
 
-### 🔄 In Progress:
-- None
+## Step 3: Create Fetch Script
+- [x] Create backend/fetch_nasa_data.py script for optional NDVI fetching from MODIS (requires Earthdata token) and climate batch processing.
 
-### 📋 Remaining Tasks:
-- [ ] Verify font loading and rendering
-- [ ] Test responsive design on different screen sizes
-- [ ] Check accessibility improvements
-- [ ] Validate visual consistency across components
+## Step 4: Update Frontend (Storytelling.jsx)
+- [x] Move all charts from Data.jsx to Storytelling.jsx.
+- [x] Add NDVI time series line chart.
+- [x] Add multi-line chart (NDVI + climate variables).
+- [x] Add seasonal bar chart (average NDVI by month).
+- [x] Add heatmap scatter (NDVI vs precipitation).
+- [x] Add forecast plot (observed + predicted NDVI).
+- [x] Add bar chart (cumulative precipitation/solar radiation).
+- [x] Add map heatmap for South/North California NDVI.
+- [x] Add slider for bloom/time selection.
+- [x] Add summary/description related to model.
+- [x] Add climate data charts (temp, rainfall, humidity, solar).
+- [x] Improve UI with better CSS styling and grid layout.
+- [x] Add EVI time series chart.
+- [x] Add soil moisture chart.
 
-## Implementation Steps:
-
-1. **Add Google Fonts Import**
-   - Add Righteous font import to index.html
-   - Update CSS font-family declarations
-
-2. **Enhance Hero Section Styling**
-   - Add 3C2B4C color overlay with 35% opacity
-   - Add text shadows and modern effects
-   - Improve typography and spacing
-
-3. **Improve Navigation Bar**
-   - Reduce font size from 1.2em to 1em
-   - Add professional hover effects and shadows
-   - Enhance mobile responsiveness
-
-4. **Add Professional UI Enhancements**
-   - Implement modern gradients and shadows
-   - Improve color scheme consistency
-   - Add subtle animations and transitions
+## Step 5: Followup
+- [x] Install/update dependencies with pip install -r requirements.txt.
+- [x] Test NASA POWER API fetch in backend.
+- [x] Run Flask app and verify endpoints.
+- [x] Test frontend charts with fetched data.
+- [x] Test new NASA API routes.
+- [x] Update frontend with new charts.
+- [ ] If needed, run fetch_nasa_data.py to update NDVI CSV.
