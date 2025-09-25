@@ -19,6 +19,7 @@ function Storytelling() {
   const [forecastData, setForecastData] = useState([]);
   const [bloomEvents, setBloomEvents] = useState([]);
   const [ndviMapData, setNdviMapData] = useState([]);
+  const [bloomPredictionData, setBloomPredictionData] = useState([]);
   const [timeRange, setTimeRange] = useState([0, 83]); // Index for NDVI data
 
   useEffect(() => {
@@ -151,6 +152,19 @@ function Storytelling() {
         }
       })
       .catch(err => console.error('Error fetching soil moisture:', err));
+
+    // Fetch bloom prediction data
+    fetch('http://localhost:5000/bloom_prediction')
+      .then(res => res.json())
+      .then(data => {
+        const chartData = data.dates.map((date, i) => ({
+          date,
+          actual: data.actual_ndvi[i],
+          predicted: data.predicted_ndvi[i]
+        }));
+        setBloomPredictionData(chartData);
+      })
+      .catch(err => console.error('Error fetching bloom prediction:', err));
   }, []);
 
   // Prepare combined data
@@ -400,6 +414,24 @@ function Storytelling() {
           </LineChart>
         </ResponsiveContainer>
         <p className={styles.summary}>The model forecasts future NDVI to anticipate bloom risks. Current prediction: {latestPred?.ndvi?.toFixed(3)}.</p>
+      </Landing>
+
+      {/* Section 7.5: Bloom Prediction Chart */}
+      <Landing className={styles.forecastSection}>
+        <h2 className={styles.sectionTitle}>🌸 Bloom Prediction Model</h2>
+        <p className={styles.analysisNote}>LSTM model trained on NDVI, temperature, rainfall, and humidity data to predict bloom peaks.</p>
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart data={bloomPredictionData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="actual" name="Actual NDVI" stroke="#82ca9d" />
+            <Line type="monotone" dataKey="predicted" name="Predicted NDVI" stroke="#ff7300" />
+          </LineChart>
+        </ResponsiveContainer>
+        <p className={styles.summary}>The model predicts NDVI trends to identify potential bloom peaks. Peaks in predicted NDVI indicate optimal bloom conditions.</p>
       </Landing>
 
       {/* Section 8: Cumulative Bar Chart */}

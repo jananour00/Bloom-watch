@@ -5,7 +5,8 @@ from flask_cors import CORS
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import load_model, Sequential
+from tensorflow.keras.layers import LSTM, Dense
 from sklearn.preprocessing import MinMaxScaler
 import os
 import requests
@@ -186,6 +187,94 @@ def chart():
     fig = px.line(df_ndvi, x='date', y='NDVI', title='NDVI Over Time')
     fig_html = fig.to_html(full_html=False)
     return fig_html
+
+@app.route('/bloom_prediction', methods=['GET'])
+def bloom_prediction():
+    # Load NDVI
+    df_ndvi = pd.read_csv("backend/NDVI_TimeSeries_CentralValley (2).csv")
+    df_ndvi['NDVI'] = df_ndvi['NDVI'].astype(float)
+    df_ndvi['year'] = df_ndvi['year'].astype(int)
+    df_ndvi['month'] = df_ndvi['month'].astype(int)
+    df_ndvi['date'] = pd.to_datetime(df_ndvi['year'].astype(str) + '-' + df_ndvi['month'].astype(str) + '-01')
+    df_ndvi = df_ndvi.sort_values('date')
+
+    # Fetch Climate Data
+    locations = {
+        'North_CA': (38.5, -121.5),
+        'South_CA': (33.0, -117.0)
+    }
+
+    dfs_climate = []
+    for name, (lat, lon) in locations.items():
+        start_date = df_ndvi['date'].min().strftime('%Y%m%d')
+        end_date = df_ndvi['date'].max().strftime('%Y%m%d')
+        url = f"https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,PRECTOTCORR,RH2M&community=AG&longitude={lon}&latitude={lat}&start={start_date}&end={end_date}&format=JSON"
+        r = requests.get(url)
+        data = r.json()
+        df_list = []
+        for date, temp in data['properties']['parameter']['T2M'].items():
+            rainfall = data['properties']['parameter']['PRECTOTCORR'][date]
+            humidity = data['properties']['parameter']['RH2M'][date]
+            df_list.append([date, temp, rainfall, humidity])
+        df_clim = pd.DataFrame(df_list, columns=['YYYYMMDD', 'Temp', 'Rainfall', 'Humidity'])
+        df_clim['date'] = pd.to_datetime(df_clim['YYYYMMDD'], format='%Y%m%d')
+        df_clim['Region'] = name
+        dfs_climate.append(df_clim)
+
+    df_climate_all = pd.concat(dfs_climate, ignore_index=True)
+
+    # Merge
+    df_ndvi_expanded = pd.concat([df_ndvi.assign(Region=name) for name in locations.keys()], ignore_index=True)
+    df_full = pd.merge(df_ndvi_expanded, df_climate_all, on=['date','Region'], how='left')
+    df_full = df_full.sort_values(['Region','date']).reset_index(drop=True)
+
+    # Prepare data
+    features = ['NDVI', 'Temp', 'Rainfall', 'Humidity']
+    scaler = MinMaxScaler(feature_range=(0,1))
+    scaled_data = scaler.fit_transform(df_full[features])
+
+    def create_sequences(data, seq_length):
+        X, y = [], []
+        for i in range(len(data) - seq_length):
+            X.append(data[i:i+seq_length])
+            y.append(data[i+seq_length, 0])
+        return np.array(X), np.array(y)
+
+    seq_length = 5
+    X, y = create_sequences(scaled_data, seq_length)
+    split = int(len(X)*0.8)
+    X_train, X_test = X[:split], X[split:]
+    y_train, y_test = y[:split], y[split:]
+
+    # Build model
+    model = Sequential()
+    model.add(LSTM(50, activation='relu', input_shape=(seq_length, len(features))))
+    model.add(Dense(1))
+    model.compile(optimizer='adam', loss='mse')
+    model.fit(X_train, y_train, epochs=50, batch_size=8, verbose=0)  # Reduced epochs for speed
+
+    # Predict
+    y_pred = model.predict(X_test)
+    y_pred_rescaled = scaler.inverse_transform(
+        np.concatenate([y_pred, np.zeros((y_pred.shape[0], len(features)-1))], axis=1)
+    )[:,0]
+    y_test_rescaled = scaler.inverse_transform(
+        np.concatenate([y_test.reshape(-1,1), np.zeros((y_test.shape[0], len(features)-1))], axis=1)
+    )[:,0]
+
+    # Peak day
+    peak_index = np.argmax(y_pred_rescaled)
+    dates_test = df_full['date'].iloc[split + seq_length : split + seq_length + len(y_test_rescaled)]
+    peak_day = dates_test.iloc[peak_index].strftime('%Y-%m-%d')
+
+    # Return data
+    result = {
+        'dates': dates_test.dt.strftime('%Y-%m-%d').tolist(),
+        'actual_ndvi': y_test_rescaled.tolist(),
+        'predicted_ndvi': y_pred_rescaled.tolist(),
+        'peak_bloom_day': peak_day
+    }
+    return jsonify(result)
 
 # -------------------------------
 # 5️⃣ Run Flask app
