@@ -41,14 +41,6 @@
   composes: landing;
   background-color: white;
 }
-.earthMap{
-    width: 80%;
-    margin: auto;
-    box-shadow:
-        0 8px 25px rgba(164, 28, 108, 0.2),
-        0 4px 12px rgba(164, 28, 108, 0.15);
-    border-radius: 1rem;
-}
 
 .filtersContainer{
     width: 80%;

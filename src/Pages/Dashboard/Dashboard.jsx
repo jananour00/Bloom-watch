@@ -1,10 +1,16 @@
 import Landing from "../../Components/Landing/Landing.jsx";
 import InfoCard from "../../Components/InfoCard/InfoCard.jsx";
-import Earth from "../../Components/Earth/Earth.jsx";
+import Map from "../../Components/Map/Map.jsx";
 import RangeSlider from "../../Components/RangeSlider/RangeSlider.jsx";
 import styles from "./Dashboard.module.css"
 
 function Dashboard(){
+
+    const bloomEvents = [
+    { geoCode: [30.0, 31.2], text: "Jasmine", value: 1},
+    { geoCode: [30.1, 31.3], text: "Lily", value: 1},
+    { geoCode: [30.2, 31.5], text: "Tulip", value: 1},
+    ];
 
     return(
         <div className={styles.landingWrapper}>
@@ -18,9 +24,7 @@ function Dashboard(){
                 </div>
             </Landing>
             <Landing className={styles.MapLanding}>
-                <div className={styles.earthMap}>
-                    <Earth/>
-                </div>
+                    <Map bloomEvents={bloomEvents} animate={true}></Map>
                 <form className={styles.filtersContainer}>
                     <RangeSlider></RangeSlider>
                 </form>
