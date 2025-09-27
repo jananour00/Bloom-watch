@@ -4,6 +4,7 @@ import Landing from '../../Components/Landing/Landing.jsx';
 import InfoCard from '../../Components/InfoCard/InfoCard.jsx';
 import Map from '../../Components/Map/Map.jsx';
 import NDVIMap from '../../Components/Map/NDVIMap.jsx';
+import SuperBloomMap from '../../Components/Map/SuperBloomMap.jsx';
 import RangeSlider from '../../Components/RangeSlider/RangeSlider.jsx';
 import styles from './Storytelling.module.css';
 
@@ -462,6 +463,14 @@ function Storytelling() {
           </div>
         )}
         <p className={styles.summary}>Alerts are generated based on predicted NDVI thresholds. Green indicates healthy conditions, yellow early warning, red immediate action needed.</p>
+      </Landing>
+
+      {/* Section 10: Super Bloom Interactive Map */}
+      <Landing className={styles.mapSection}>
+        <h2 className={styles.sectionTitle}>🌸 Super Bloom Interactive Map</h2>
+        <p className={styles.analysisNote}>Interactive map visualizing Super Bloom data layers across years. Use the slider to select year, toggle layers, and click on the map for pixel-level features.</p>
+        <SuperBloomMap />
+        <p className={styles.summary}>Layers include NDVI, EVI, Rainfall, Temperature, Fire, BloomStage, and Predicted BloomStage. Animation cycles through years automatically.</p>
       </Landing>
     </div>
   );
