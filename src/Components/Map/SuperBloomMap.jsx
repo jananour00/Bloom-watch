@@ -55,11 +55,9 @@ function SuperBloomMap() {
   const mapRef = useRef(null);
   const [visibleLayers, setVisibleLayers] = useState(layers.reduce((acc, layer) => ({ ...acc, [layer]: true }), {}));
   const [csvData, setCsvData] = useState([]);
-  const [yearlyAverages, setYearlyAverages] = useState({});
-  const [allOverlays, setAllOverlays] = useState({});
 
   useEffect(() => {
-    // Load CSV data once and compute yearly averages
+    // Load CSV data once
     fetch('/SuperBloom_FullData_AllFeatures_Predicted.csv')
       .then(response => response.text())
       .then(text => {
@@ -78,49 +76,6 @@ function SuperBloomMap() {
           };
         }).filter(row => !isNaN(row.year));
         setCsvData(data);
-
-        // Compute yearly averages for all years
-        const averages = {};
-        const overlays = {};
-        const mockWidth = 1000;
-        const mockHeight = 800;
-        years.forEach(year => {
-          const yearData = data.filter(row => row.year === year);
-          if (yearData.length > 0) {
-            const layerAverages = {};
-            layers.forEach(layer => {
-              const values = yearData.map(row => row[layer]).filter(v => !isNaN(v) && v !== undefined);
-              layerAverages[layer] = values.length > 0 ? values.reduce((a, b) => a + b, 0) / values.length : 0;
-            });
-            averages[year] = layerAverages;
-
-            // Generate overlays for this year
-            const yearOverlays = {};
-            layers.forEach((layer, idx) => {
-              const avg = layerAverages[layer];
-              const canvas = document.createElement('canvas');
-              canvas.width = mockWidth;
-              canvas.height = mockHeight;
-              const ctx = canvas.getContext('2d');
-              const imageData = ctx.createImageData(canvas.width, canvas.height);
-              const imgData = new Uint8ClampedArray(imageData.data);
-              for (let i = 0; i < imgData.length / 4; i++) {
-                const value = Math.max(0, Math.min(colorScales[layer].domain()[1], avg)); // Clamp value
-                const color = colorScales[layer](value).rgba();
-                const offset = i * 4;
-                imgData[offset] = color[0];
-                imgData[offset + 1] = color[1];
-                imgData[offset + 2] = color[2];
-                imgData[offset + 3] = 255;
-              }
-              ctx.putImageData(new ImageData(imgData, canvas.width, canvas.height), 0, 0);
-              yearOverlays[layer] = canvas.toDataURL('image/png');
-            });
-            overlays[year] = yearOverlays;
-          }
-        });
-        setYearlyAverages(averages);
-        setAllOverlays(overlays);
       })
       .catch(err => {
         console.error('Error loading CSV:', err);
@@ -129,16 +84,16 @@ function SuperBloomMap() {
   }, []);
 
   useEffect(() => {
-    if (Object.keys(yearlyAverages).length > 0) {
-      loadData(selectedYear);
+    if (csvData.length > 0) {
+      loadTiff(selectedYear);
     }
-  }, [selectedYear, yearlyAverages]);
+  }, [selectedYear, csvData]);
 
-  const loadData = (year) => {
+  const loadTiff = async (year) => {
     setLoading(true);
     setError(null);
     try {
-      // Filter CSV data for the selected year
+      // Use CSV data for the year
       const yearData = csvData.filter(row => row.year === year);
       if (yearData.length === 0) {
         throw new Error(`No data for year ${year}`);
@@ -147,7 +102,7 @@ function SuperBloomMap() {
       // Compute yearly averages for each layer
       const layerAverages = {};
       layers.forEach(layer => {
-        const values = yearData.map(row => row[layer]).filter(v => !isNaN(v) && v !== undefined);
+        const values = yearData.map(row => row[layer]).filter(v => !isNaN(v));
         layerAverages[layer] = values.length > 0 ? values.reduce((a, b) => a + b, 0) / values.length : 0;
       });
 
@@ -165,7 +120,7 @@ function SuperBloomMap() {
         return data;
       });
 
-      setTiffData({ rasters: rasters, width: mockWidth, height: mockHeight, averages: layerAverages });
+      setTiffData({ rasters: rasters, width: mockWidth, height: mockHeight });
 
       // Generate overlays from rasters
       const newOverlays = {};
@@ -193,7 +148,7 @@ function SuperBloomMap() {
     } catch (error) {
       console.error('Error loading data:', error);
       setError(`Failed to load data for ${year}: ${error.message}`);
-      // Fallback to zero rasters
+      // Fallback to zero rasters if needed
       const mockWidth = 1000;
       const mockHeight = 800;
       const mockBounds = [[32, -125], [42, -114]];
@@ -203,7 +158,7 @@ function SuperBloomMap() {
         data.fill(0); // Zero values as fallback
         return data;
       });
-      setTiffData({ rasters: mockRasters, width: mockWidth, height: mockHeight, averages: layers.reduce((acc, layer) => ({ ...acc, [layer]: 0 }), {}) });
+      setTiffData({ rasters: mockRasters, width: mockWidth, height: mockHeight });
 
       const newOverlays = {};
       layers.forEach((layer, idx) => {
