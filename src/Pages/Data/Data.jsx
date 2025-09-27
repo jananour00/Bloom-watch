@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ScatterChart, Scatter, Cell, BarChart, Bar } from 'recharts';
 import Map from '../../Components/Map/Map.jsx';
+import SuperBloomMap from '../../Components/Map/SuperBloomMap.jsx';
 import styles from './Data.module.css';
 
 function Data() {
@@ -297,7 +298,14 @@ function Data() {
         <Map bloomEvents={bloomEvents} />
       </div>
 
-      {/* 9. Alerts */}
+      {/* 9. Super Bloom Interactive Map */}
+      <div className={styles.chartSection}>
+        <h2>🌸 Super Bloom Interactive Map</h2>
+        <p>Interactive map visualizing Super Bloom data layers across years (2019-2024). Toggle layers (NDVI, EVI, Rainfall, Temperature, Fire, BloomStage, PredictedBloomStage), use the year slider, and click for pixel details. Supports zoom, pan, and animation.</p>
+        <SuperBloomMap />
+      </div>
+
+      {/* 10. Alerts */}
       <div className={styles.chartSection}>
         <h2>Alerts</h2>
         <ul>
@@ -308,7 +316,7 @@ function Data() {
       </div>
 
       <div className={styles.note}>
-        <p>Data fetched from NASA POWER API and MODIS NDVI. Predictions from LSTM model.</p>
+        <p>Data fetched from NASA POWER API and MODIS NDVI. Predictions from LSTM model. Super Bloom layers from GeoTIFF rasters with color-scaled visualization.</p>
       </div>
     </div>
   );
