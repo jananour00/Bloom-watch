@@ -1,0 +1,286 @@
+.container {
+    padding-top: 5em;
+  min-height: 100vh;
+  background-color: white;
+  font-family: Arial, sans-serif;
+}
+
+.choiceContainer {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.choiceHeader {
+  margin-bottom: 50px;
+}
+
+.mainTitle {
+  font-size: 3rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.choiceCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.choiceCard {
+  background: white;
+  border-radius: 15px;
+  padding: 40px 30px;
+  box-shadow: 0 8px 30px rgba(242, 174, 187, 0.2);
+  border: 2px solid #F2AEBB;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.choiceCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(242, 174, 187, 0.3);
+}
+
+.choiceIcon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.cardTitle {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.cardDescription {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.choiceButton {
+  background: #F2AEBB;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.choiceButton:hover {
+  background: #E85A4F;
+}
+
+.backButton {
+  background: transparent;
+  border: 2px solid #F2AEBB;
+  color: #F2AEBB;
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 30px;
+  transition: all 0.3s ease;
+}
+
+.backButton:hover {
+  background: #F2AEBB;
+  color: white;
+}
+
+.formContainer {
+  padding: 40px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.formHeader {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.formTitle {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.healthForm {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.input {
+  padding: 15px;
+  border-radius: 10px;
+  border: 2px solid #F2AEBB;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.input:focus {
+  border-color: #E85A4F;
+}
+
+.select {
+  padding: 15px;
+  border-radius: 10px;
+  border: 2px solid #F2AEBB;
+  font-size: 1rem;
+  outline: none;
+  background-color: white;
+}
+
+.select:focus {
+  border-color: #E85A4F;
+}
+
+.submitButton {
+  background: #F2AEBB;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 15px 40px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+}
+
+.submitButton:hover {
+  background: #E85A4F;
+}
+
+.resultsContainer {
+  padding: 40px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.resultsHeader {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.chartsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+.chartCard {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 5px 20px rgba(242, 174, 187, 0.15);
+  border: 1px solid #F2AEBB;
+}
+
+.chartTitle {
+  font-size: 1.4rem;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.adviceSection {
+  margin-top: 50px;
+}
+
+.adviceGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.adviceCard {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(242, 174, 187, 0.1);
+  border: 1px solid #F2AEBB;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.adviceNumber {
+  background: #F2AEBB;
+  color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.insightsSection {
+  margin-top: 50px;
+}
+
+.insightsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.insightCard {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(242, 174, 187, 0.1);
+  border: 1px solid #F2AEBB;
+}
+
+.insightTitle {
+  font-size: 1.2rem;
+  color: #000000;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.advices{
+    color:#000000
+}
