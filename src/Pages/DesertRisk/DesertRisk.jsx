@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+ import React, { useState, useEffect } from "react";
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import "leaflet.heat";
-import { Bar, Scatter, Line } from "react-chartjs-2";
+import { Bar, Scatter, Line, Radar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,19 +11,27 @@ import {
   BarElement,
   PointElement,
   LineElement,
+  RadialLinearScale,
+  RadarController,
   Tooltip,
   Legend
 } from "chart.js";
+import chroma from "chroma-js";
 
 // Register Chart.js components
-ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, RadialLinearScale, RadarController, Tooltip, Legend);
 
 // Gradients for different features
 const gradients = {
   PredictedRisk: {0.2: 'blue', 0.4: 'lime', 0.6: 'yellow', 0.8: 'orange', 1.0: 'red'},
   Temperature: {0.2: 'blue', 0.4: 'cyan', 0.6: 'yellow', 0.8: 'orange', 1.0: 'red'},
   Rainfall: {0.2: 'red', 0.4: 'orange', 0.6: 'yellow', 0.8: 'lime', 1.0: 'blue'},
-  NDVI: {0.2: 'red', 0.4: 'orange', 0.6: 'yellow', 0.8: 'lime', 1.0: 'green'}
+  NDVI: {0.2: 'red', 0.4: 'orange', 0.6: 'yellow', 0.8: 'lime', 1.0: 'green'},
+  EVI: {0.2: 'red', 0.4: 'orange', 0.6: 'yellow', 0.8: 'lime', 1.0: 'green'},
+  SoilMoisture: {0.2: 'red', 0.4: 'orange', 0.6: 'yellow', 0.8: 'lime', 1.0: 'blue'},
+  Evapotranspiration: {0.2: 'blue', 0.4: 'lime', 0.6: 'yellow', 0.8: 'orange', 1.0: 'red'},
+  FireIndex: {0.2: 'blue', 0.4: 'lime', 0.6: 'yellow', 0.8: 'orange', 1.0: 'red'},
+  elevation: {0.2: 'blue', 0.4: 'cyan', 0.6: 'yellow', 0.8: 'orange', 1.0: 'red'}
 };
 
 // HeatLayer component
