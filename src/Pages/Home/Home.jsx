@@ -23,13 +23,14 @@ function Home() {
       <Landing className={styles.cardsLanding}>
         <h2>Problem & Mission</h2>
         <div className={styles.cardsContainer}>
-          <Card
+          <Card 
+          className={styles.card}
             src="./src/assets/worldmap.png"
             title="Environmental Monitoring"
             description="Our advanced sensor network provides real-time data on air quality, pollen levels, and environmental conditions across multiple locations. We collect comprehensive data to help communities understand their local environment and make informed decisions about health and sustainability."
             delay={0.1}
           />
-          <Card
+          <Card className={styles.card}
             src="./src/assets/flower.png"
             title="Biodiversity Tracking"
             description="BloomWatch tracks plant phenology and biodiversity patterns, helping researchers and communities understand how climate change affects local ecosystems. Our data contributes to conservation efforts and helps predict seasonal changes that impact agriculture and wildlife."
@@ -67,28 +68,28 @@ function Home() {
         <h2>What You Can Do with Bloom-Watch</h2>
         <p className={styles.featuresSubtitle}>Explore blooms, track changes, and understand their impact — all in one place.</p>
         <div className={styles.featuresContainer}>
-          <Card
+          <Card className={styles.featuresCard}
             src="./src/assets/worldmap.png"
             title="See from Space"
             description="Interactive bloom maps powered by NASA & ESA satellites."
             delay={0.1}
             featureType="satellite"
           />
-          <Card
+          <Card className={styles.featuresCard}
             src="./src/assets/TestCardimg.png"
             title="Understand the Data"
             description="Charts & insights about bloom patterns, intensity, and coverage."
             delay={0.2}
             featureType="analytics"
           />
-          <Card
+          <Card className={styles.featuresCard}
             src="./src/assets/flower.png"
             title="Stay Safe"
             description="Allergy and pollen forecasts with health recommendations."
             delay={0.3}
             featureType="health"
           />
-          <Card
+          <Card className={styles.featuresCard}
             src="./src/assets/worldmap.png"
             title="Link to Climate"
             description="Discover how blooms connect to climate shifts and disasters."
