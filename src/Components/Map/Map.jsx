@@ -3,12 +3,13 @@ import { MapContainer, TileLayer, LayersControl, CircleMarker } from "react-leaf
 import Heatmap from "./Heatmap";
 import styles from "./Map.module.css";
 import "leaflet/dist/leaflet.css";
+import { a } from "framer-motion/m";
 
 const { BaseLayer } = LayersControl;
 
 function Map({ bloomEvents = [] , animate = false}) {
   const basePoints = useMemo(
-    () => bloomEvents.map((e) => ({ lat: e.geoCode[0], lng: e.geoCode[1], value: e.value ?? 1 })),
+    () => bloomEvents.map((e) => ({ lat: e.geoCode[0], lng: e.geoCode[1], value:(!animate)? 5:  e.value ?? 1})),
     [bloomEvents]
   );
 
@@ -40,7 +41,7 @@ function Map({ bloomEvents = [] , animate = false}) {
 
   return (
     <>
-      <MapContainer center={[30.0444, 31.2357]} zoom={13} className={styles.earthMap}>
+      <MapContainer center={[30.0444, 31.2357]} zoom={13} minZoom={2} className={styles.earthMap}>
         <LayersControl position="topright">
           <BaseLayer checked name="Tiles">
             <TileLayer
@@ -57,7 +58,7 @@ function Map({ bloomEvents = [] , animate = false}) {
           </BaseLayer>
         </LayersControl>
 
-        <Heatmap points={animate ? points : basePoints} options={{ radius: 80, blur: 50, max: 1, minZoom: 5, maxZoom: 10}} />
+        <Heatmap points={animate ? points : basePoints} options={{ radius: 70, blur: 60, max: 1, minZoom: 5, maxZoom: 10}} />
         {bloomEvents.map((Event, i) => (
           <CircleMarker
             key={i}
