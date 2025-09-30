@@ -39,52 +39,53 @@ function Map({ bloomEvents = [] , animate = false}) {
   }, [animate, basePoints]);
 
   return (
-    <MapContainer center={[30.0444, 31.2357]} zoom={13} className={styles.earthMap}>
-      <LayersControl position="topright">
-        <BaseLayer checked name="Cartoon">
-          <TileLayer
-            attribution='&copy; OpenStreetMap contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    <>
+      <MapContainer center={[30.0444, 31.2357]} zoom={13} className={styles.earthMap}>
+        <LayersControl position="topright">
+          <BaseLayer checked name="Tiles">
+            <TileLayer
+              attribution='&copy; OpenStreetMap contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+          </BaseLayer>
+
+          <BaseLayer name="Satellite">
+            <TileLayer
+              attribution="Tiles © Esri"
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+            />
+          </BaseLayer>
+        </LayersControl>
+
+        <Heatmap points={animate ? points : basePoints} options={{ radius: 80, blur: 50, max: 1, minZoom: 5, maxZoom: 10}} />
+        {bloomEvents.map((Event, i) => (
+          <CircleMarker
+            key={i}
+            center={Event.geoCode}
+            radius={40}
+            pathOptions={{ opacity: 0, fillOpacity: 0 }}
+            maxZoom={10}
+            eventHandlers={{
+              click: () => {
+                setSelectedEvent(Event);
+                setIsModalOpen(true);
+              },
+            }}
           />
-        </BaseLayer>
-
-        <BaseLayer name="Satellite">
-          <TileLayer
-            attribution="Tiles © Esri"
-            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-          />
-        </BaseLayer>
-      </LayersControl>
-
-      <Heatmap points={animate ? points : basePoints} options={{ radius: 40, blur: 80, max: 1, minZoom: 5, maxZoom: 10}} />
-      {bloomEvents.map((Event, i) => (
-        <CircleMarker
-          key={i}
-          center={Event.geoCode}
-          radius={40}
-          pathOptions={{ opacity: 0, fillOpacity: 0 }}
-          eventHandlers={{
-            click: () => {
-              setSelectedEvent(Event);
-              setIsModalOpen(true);
-            },
-          }}
-        />
-      ))}
-
-      {isModalOpen && selectedEvent && (
+        ))}
+      </MapContainer>
+        {isModalOpen && selectedEvent && (
         <div className={styles['modal-overlay']} onClick={() => setIsModalOpen(false)}>
           <div className={styles['modal-content']} onClick={(e) => e.stopPropagation()}>
             <h2>🌸 Bloom Event</h2>
-            <p><strong>Details:</strong> {selectedEvent.text}</p>
-            <p><strong>Location:</strong> {selectedEvent.geoCode.join(', ')}</p>
-            {selectedEvent.value && <p><strong>Value:</strong> {selectedEvent.value}</p>}
+            <p>Details: {selectedEvent.text}</p>
+            <p>Location: {`${Math.round(selectedEvent.geoCode[0]*100)/100}° N ${Math.round(selectedEvent.geoCode[1]*100)/100} ° E`}</p>
+            {selectedEvent.value && <p>Intensity: {Math.round(selectedEvent.value* 1000) / 1000 }</p>}
             <button className={styles['close-button']} onClick={() => setIsModalOpen(false)}>Close</button>
           </div>
         </div>
       )}
-
-    </MapContainer>
+    </>
   );
 }
 

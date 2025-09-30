@@ -24,11 +24,10 @@ export default function Heatmap({ points = [], options = {} }) {
       minZoom: 0,
       maxZoom: 0,
       gradient: {
-        0.2: 'pink',
-        0.4: 'lightpink',
-        0.6: 'hotpink',
-        0.8: 'deeppink',
-        1.0: 'magenta'
+        0.4: '#ff0000ff', // Yellow
+        0.6: '#ff8800ff', // GreenYellow
+        0.8: '#008000', // Green
+        1.0: '#006400'  // DarkGreen
       },
       ...options
     }).addTo(map);

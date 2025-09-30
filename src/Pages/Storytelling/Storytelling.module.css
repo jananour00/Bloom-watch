@@ -1,130 +1,178 @@
-.storytellingWrapper {
-  min-height: 100vh;
-  background: linear-gradient(to bottom, #f0f8ff, #e6f3ff);
-  font-family: 'Arial', sans-serif;
+/* --- Main Layout --- */
+.storyContainer {
+    display: flex;
+    height: 100vh;
+    padding-top: calc(var(--header-height));
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-.introSection {
-  padding: 4rem 2rem;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.8);
-}
-
-.title {
-  font-size: 3rem;
-  color: #2c3e50;
-  margin-bottom: 1rem;
-}
-
-.subtitle {
-  font-size: 1.5rem;
-  color: #7f8c8d;
-  margin-bottom: 2rem;
-}
-
-.cardsContainer {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.climateSection,
-.vegetationSection,
-.bloomsSection,
-.predictionsSection,
-.ndviSection,
-.multiSection,
-.seasonalSection,
-.heatmapSection,
-.mapSection,
-.forecastSection,
-.cumulativeSection,
-.alertsSection,
-.climateDataSection {
-  padding: 4rem 2rem;
-  background: rgba(255, 255, 255, 0.9);
-  margin: 2rem auto;
-  max-width: 1400px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.sectionTitle {
-  font-size: 2.5rem;
-  color: #34495e;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.analysisNote {
-  background: #e8f4fd;
-  padding: 1rem;
-  border-left: 5px solid #3498db;
-  margin: 1rem 0;
-  font-style: italic;
-  color: #2c3e50;
-}
-
-.chartMapContainer {
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-.chartContainer,
-.mapContainer {
-  flex: 1;
-  min-width: 400px;
-}
-
-.chartGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.alert {
-  background: #fff3cd;
-  border: 1px solid #ffeaa7;
-  padding: 1rem;
-  border-radius: 5px;
-  margin-top: 2rem;
-  text-align: center;
-}
-
-.alert h3 {
-  color: #856404;
-  margin: 0 0 0.5rem 0;
-}
-
-.summary {
-  background: #f8f9fa;
-  padding: 1rem;
-  border-radius: 5px;
-  margin-top: 1rem;
-  font-weight: bold;
-  color: #495057;
-}
-
-@media (max-width: 768px) {
-  .cardsContainer {
+.visualization {
+    width: 60%;
+    height: 100%;
+    position: relative;
+    display: flex;
     flex-direction: column;
+}
+
+.sliderContainer {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    z-index: 1000;
+}
+
+.narrative {
+    width: 40%;
+    height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 3rem;
+    background: #fdfdfd;
+    border-left: 1px solid #e0e0e0;
+}
+
+/* --- Story Text Styling --- */
+.narrativeIntro {
+    text-align: center;
+    padding-bottom: 50vh;
+}
+.narrativeIntro h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+}
+.narrativeIntro p {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+}
+
+.storyStep {
+    min-height: 90vh; /* Make steps tall to ensure proper trigger spacing */
+    opacity: 0.4;
+    transition: opacity 0.4s ease-in-out;
+    border-left: 3px solid #e0e0e0;
+    padding-left: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.storyStep[data-inview='true'] {
+    opacity: 1;
+    border-left: 3px solid #5a67d8;
+}
+
+.storyStep h3 {
+    font-size: 1.8rem;
+    color: #34495e;
+    margin-top: 0;
+}
+
+.storyStep p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #34495e;
+}
+
+/* --- Text and Chart Centering Styles --- */
+.textContainer {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.chartWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.chartContainer {
+    width: 100%;
+    max-width: 550px;
+    height: 250px;
+}
+
+
+/* --- Animation Controls Styling --- */
+.animationControls {
+    display: flex;
+    justify-content: center;
     align-items: center;
-  }
+    margin-top: 1rem;
+    gap: 1.5rem;
+}
 
-  .chartMapContainer {
-    flex-direction: column;
-  }
+.animationControls button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: #5a67d8;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
 
-  .title {
-    font-size: 2rem;
-  }
+.animationControls button:hover {
+    background-color: #4c58b8;
+}
 
-  .sectionTitle {
-    font-size: 2rem;
-  }
+.animationControls button:active {
+    transform: scale(0.98);
+}
+
+.animationStatus {
+    color: #cbd5e0;
+    font-size: 0.9rem;
+    background-color: rgba(44, 45, 73, 0.7);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    min-width: 150px;
+    text-align: center;
+}
+
+.speedControl {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #cbd5e0;
+    font-size: 0.9rem;
+}
+
+.speedControl input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 120px;
+    height: 5px;
+    background: #3c3d5e;
+    border-radius: 5px;
+    outline: none;
+    transition: opacity 0.2s;
+    cursor: pointer;
+}
+
+.speedControl input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border: 2px solid #5a67d8;
+    border-radius: 50%;
+}
+
+.speedControl input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border: 2px solid #5a67d8;
+    border-radius: 50%;
+    cursor: pointer;
 }
