@@ -63,6 +63,11 @@ function Header() {
               Health & Pollen
             </NavLink>
           </li>
+          <li className={styles.navItem}>
+            <NavLink to="/DesertRisk" className={({isActive}) => (isActive ? styles.ActiveLink: "")} onClick={() => setMobileMenuOpen(false)}>
+              Desert Risk
+            </NavLink>
+          </li>
         </ul>
       </nav>
     </header>

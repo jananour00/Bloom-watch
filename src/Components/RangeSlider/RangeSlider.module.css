@@ -1,101 +1,130 @@
+/* --- Main Container --- */
 .wrapper {
-  width: 80%;
-  margin: auto;
-  font-family: sans-serif;
-  color: black;
+    width: 100%;
+    padding: 1.5rem 2.5rem; /* Adjusted padding for the new labels */
+    background-color: #1a1b2f; /* Dark, slightly purplish background */
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
 }
 
+/* --- Ruler Labels --- */
 .labels {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.separator {
-  font-size: 1.2rem;
-  color: #888;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    font-family: sans-serif;
+    font-size: 0.75rem;
+    color: #8c92b9; /* Lighter color for the ruler text */
 }
 
 .label {
-  font-size: 0.9rem;
-  color: gray;
-  transition: transform 0.2s, color 0.2s;
+    transition: color 0.2s ease-in-out;
 }
 
 .label.active {
-  font-size: 1.3rem;
-  color: black;
-  font-weight: bold;
-  transform: scale(1.2);
-  margin: 1%;
+    color: #ffffff; /* Highlight the active label */
+    font-weight: bold;
 }
 
+.separator {
+    color: #8c92b9;
+}
+
+
+/* --- Slider Track --- */
 .slider {
-  position: relative;
-  height: 16px; /* match thumb size */
-  display: flex;
-  align-items: center; /* centers everything vertically */
-  background-color: rgb(194, 194, 194);
-  border-radius: 3px;
+    position: relative;
+    height: 10px;
+    display: flex;
+    align-items: center;
 }
 
-.slider input[type="range"] {
-  position: absolute;
-  width: 100%;
-  -webkit-appearance: none;
-  background: transparent;
-  pointer-events: none;
-}
-
-
-.slider input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: #a41c6c;
-  cursor: pointer;
-  pointer-events: all;
-  position: relative;
-  z-index: 2;
-}
-
-.slider input[type="range"]::-moz-range-thumb {
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: #a41c6c;
-  cursor: pointer;
-  pointer-events: all;
-  position: relative;
-  z-index: 2;
-}
+/* The blue bar that shows the selected range */
 .range {
-  position: absolute;
-  height: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  border-radius: 3px;
-  background-color: white;
-  z-index: 1;
-  pointer-events: none;
+    position: absolute;
+    height: 6px;
+    background-color: #5a67d8; /* A nice indigo color */
+    border-radius: 3px;
+    z-index: 1;
 }
 
-@media (max-width: 768px) {
-  .label{
-    font-size: 0.4rem;
-  }
-  .label.active{
-    font-size: 0.5rem;
-    transform: scale(1);
-  }
-  .labels{
-    gap:0.25rem
-  }
-  .values{
-    font-size: 0.8rem;
-  }
+/* The actual input elements */
+.thumb {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 100%;
+    background: transparent;
+    position: absolute;
+    left: 0;
+    pointer-events: none; /* Allows clicks to pass through to the other thumb */
 }
+
+/* --- Slider Thumb (The Draggable Handle) --- */
+.thumb::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    pointer-events: all; /* Make the thumb clickable */
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 3px solid #5a67d8;
+    box-shadow: 0 0 5px rgba(90, 103, 216, 0.5);
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+
+.thumb::-moz-range-thumb {
+    -moz-appearance: none;
+    pointer-events: all;
+    width: 16px; /* Firefox dimensions are slightly different */
+    height: 16px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 3px solid #5a67d8;
+    box-shadow: 0 0 5px rgba(90, 103, 216, 0.5);
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+
+/* --- Base Track Styling --- */
+.thumb::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    height: 6px;
+    background: #3c3d5e;
+    border-radius: 3px;
+}
+.thumb::-moz-range-track {
+    -moz-appearance: none;
+    height: 6px;
+    background: #3c3d5e;
+    border-radius: 3px;
+}
+
+/* We make the top slider's track invisible so they stack correctly */
+.thumb:first-of-type::-webkit-slider-runnable-track {
+    background: transparent;
+}
+.thumb:first-of-type::-moz-range-track {
+    background: transparent;
+}
+
+
+/* --- Text Labels --- */
+.values {
+    margin-top: 0.5rem; /* Adjusted margin */
+    color: #cbd5e0; /* Light gray text for readability */
+    font-family: sans-serif;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.loading {
+    color: #cbd5e0;
+    text-align: center;
+    font-family: sans-serif;
+}
+

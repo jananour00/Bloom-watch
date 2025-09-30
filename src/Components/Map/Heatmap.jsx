@@ -1,42 +1,52 @@
-import { useEffect } from "react";
-import { useMap } from "react-leaflet";
-import L from "leaflet";
-import "leaflet.heat"; // this extends L with heatLayer
+import { useEffect, useRef } from 'react';
+import { useMap } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet.heat'; // Extends L with the heatLayer
 
 export default function Heatmap({ points = [], options = {} }) {
-  const map = useMap();
+    const map = useMap();
+    const heatLayerRef = useRef(null); // Use a ref to hold the layer instance
 
-  useEffect(() => {
-    if (!map) return;
+    useEffect(() => {
+        if (!map) return;
 
-    // sanity check
-    if (typeof L.heatLayer !== "function") {
-      console.error("leaflet.heat not loaded - L.heatLayer is", L.heatLayer);
-      return;
-    }
+        // Sanity check to ensure the plugin is loaded
+        if (typeof L.heatLayer !== 'function') {
+            console.error("leaflet.heat not loaded correctly.");
+            return;
+        }
 
-    // convert to [lat, lng, intensity]
-    const heatPoints = points.map((p) => [p.lat, p.lng, p.value ?? 1]);
+        heatLayerRef.current = L.heatLayer([], {
+            radius: 45,
+            blur: 80,
+            gradient: {
+            0.4: '#ff0000ff', // Yellow
+            0.6: '#ff8800ff', // GreenYellow
+            0.8: '#008000', // Green
+            1.0: '#006400'  // DarkGreen
+          },
+            ...options,
+        }).addTo(map);
 
-    const layer = L.heatLayer(heatPoints, {
-      radius: 0,
-      blur: 0,
-      minZoom: 0,
-      maxZoom: 0,
-      gradient: {
-        0.2: 'pink',
-        0.4: 'lightpink',
-        0.6: 'hotpink',
-        0.8: 'deeppink',
-        1.0: 'magenta'
-      },
-      ...options
-    }).addTo(map);
+        // Cleanup function: remove the layer when the component is unmounted
+        return () => {
+            if (map && heatLayerRef.current) {
+                map.removeLayer(heatLayerRef.current);
+            }
+        };
+    }, [map]); // Dependencies: only the map instance
 
-    return () => {
-      if (map && layer) map.removeLayer(layer);
-    };
-  }, [map, points, options]);
+    useEffect(() => {
+        if (heatLayerRef.current) {
+            const heatPoints = points.map((p) => [p.lat, p.lng, p.value ?? 0]);
+            heatLayerRef.current.setLatLngs(heatPoints);
+        }
+    }, [points]); // Dependency: the points data
+    useEffect(() => {
+        if (heatLayerRef.current) {
+            heatLayerRef.current.setOptions({ ...options });
+        }
+    }, [options]);
 
-  return null;
+    return null;
 }

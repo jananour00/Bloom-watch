@@ -35,10 +35,12 @@
 }
 
 .modal-content h2 {
+    color: black;
     margin-top: 0;
 }
 
 .modal-content p {
+    color: black;
     margin: 10px 0;
 }
 
