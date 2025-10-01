@@ -11,7 +11,7 @@ from sklearn.preprocessing import MinMaxScaler
 import os
 import requests
 import plotly.express as px
-from fetch_nasa_data import fetch_ndvi_harmony, fetch_bloom_events_cmr
+from fetch_nasa_data import fetch_ndvi_harmony, fetch_bloom_events_cmr, fetch_modis_ndvi, fetch_smap_soil_moisture, fetch_gldas_climate
 
 app = Flask(__name__)
 CORS(app)
@@ -303,6 +303,40 @@ def api_bloom_events():
     try:
         data = fetch_bloom_events_cmr(short_name=short_name, start_date=start_date, end_date=end_date, bbox=bbox)
         return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/ndvi_data', methods=['GET'])
+def api_ndvi_data():
+    lat = float(request.args.get('lat', '30.0'))
+    lon = float(request.args.get('lon', '31.2'))
+    start = request.args.get('start', '2018-01-01')
+    end = request.args.get('end', '2024-12-31')
+    try:
+        df = fetch_modis_ndvi(lat, lon, start, end)
+        return jsonify(df.to_dict(orient='records'))
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/soil_moisture_data', methods=['GET'])
+def api_soil_moisture_data():
+    bbox = request.args.get('bbox', '25,25,35,35')
+    start = request.args.get('start', '2018-01-01')
+    end = request.args.get('end', '2024-12-31')
+    try:
+        file_path = fetch_smap_soil_moisture(bbox, start, end)
+        return jsonify({"file": file_path, "message": "NetCDF file saved"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/climate_data', methods=['GET'])
+def api_climate_data():
+    bbox = request.args.get('bbox', '25,25,35,35')
+    start = request.args.get('start', '2018-01-01')
+    end = request.args.get('end', '2024-12-31')
+    try:
+        file_path = fetch_gldas_climate(bbox, start, end)
+        return jsonify({"file": file_path, "message": "NetCDF file saved"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

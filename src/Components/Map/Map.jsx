@@ -1,13 +1,13 @@
 import React, { useMemo, useState, useEffect } from "react";
-import { MapContainer, TileLayer, LayersControl, CircleMarker } from "react-leaflet";
+import { MapContainer, TileLayer, LayersControl, CircleMarker, Marker, Popup } from "react-leaflet";
 import Heatmap from "./Heatmap";
 import styles from "./Map.module.css";
 import "leaflet/dist/leaflet.css";
-import { a } from "framer-motion/m";
+import L from "leaflet";
 
-const { BaseLayer } = LayersControl;
+const { BaseLayer, Overlay } = LayersControl;
 
-function Map({ bloomEvents = [] , animate = false}) {
+function Map({ bloomEvents = [] , animate = false, ndviData = [], soilMoistureData = [], bloomData = [], desertificationData = [], selectedTime = ''}) {
   const basePoints = useMemo(
     () => bloomEvents.map((e) => ({ lat: e.geoCode[0], lng: e.geoCode[1], value:(!animate)? 5:  e.value ?? 1})),
     [bloomEvents]
@@ -56,6 +56,52 @@ function Map({ bloomEvents = [] , animate = false}) {
               url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
             />
           </BaseLayer>
+
+          <Overlay name="NDVI">
+            <div>
+              {ndviData.filter(d => selectedTime ? d.date.startsWith(selectedTime) : true).map((d, i) => (
+                <CircleMarker
+                  key={`ndvi-${i}`}
+                  center={[d.lat || 30.0, d.lng || 31.2]}
+                  radius={10}
+                  pathOptions={{
+                    color: d.NDVI > 0.5 ? 'green' : d.NDVI > 0.3 ? 'yellow' : 'red',
+                    fillColor: d.NDVI > 0.5 ? 'green' : d.NDVI > 0.3 ? 'yellow' : 'red',
+                    fillOpacity: 0.7
+                  }}
+                >
+                  <Popup>NDVI: {d.NDVI}</Popup>
+                </CircleMarker>
+              ))}
+            </div>
+          </Overlay>
+
+          <Overlay name="Soil Moisture">
+            <div>
+              {soilMoistureData.filter(d => selectedTime ? d.date.startsWith(selectedTime) : true).map((d, i) => (
+                <CircleMarker
+                  key={`sm-${i}`}
+                  center={[d.lat || 30.0, d.lng || 31.2]}
+                  radius={10}
+                  pathOptions={{
+                    color: 'blue',
+                    fillColor: 'blue',
+                    fillOpacity: 0.7
+                  }}
+                >
+                  <Popup>Soil Moisture: {d.value}</Popup>
+                </CircleMarker>
+              ))}
+            </div>
+          </Overlay>
+
+          <Overlay name="Bloom Predictions">
+            <Heatmap points={bloomData.filter(d => selectedTime ? d.date.startsWith(selectedTime) : true).map(d => ({ lat: d.lat || 30.0, lng: d.lng || 31.2, value: d.value || 1 }))} options={{ radius: 50, blur: 40, max: 1 }} />
+          </Overlay>
+
+          <Overlay name="Desertification Risk">
+            <Heatmap points={desertificationData.filter(d => selectedTime ? d.date.startsWith(selectedTime) : true).map(d => ({ lat: d.lat || 30.0, lng: d.lng || 31.2, value: d.value || 1 }))} options={{ radius: 50, blur: 40, max: 1 }} />
+          </Overlay>
         </LayersControl>
 
         <Heatmap points={animate ? points : basePoints} options={{ radius: 70, blur: 60, max: 1, minZoom: 5, maxZoom: 10}} />

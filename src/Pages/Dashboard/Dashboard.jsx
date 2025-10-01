@@ -7,8 +7,13 @@ import { useState, useEffect } from "react";
 
 function Dashboard(){
     const [bloomEvents, setBloomEvents] = useState([]);
+    const [ndviData, setNdviData] = useState([]);
+    const [soilMoistureData, setSoilMoistureData] = useState([]);
+    const [bloomData, setBloomData] = useState([]);
+    const [desertificationData, setDesertificationData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedTime, setSelectedTime] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM
+    const [selectedTime, setSelectedTime] = useState('2024-03'); // YYYY-MM
+    const [isPlaying, setIsPlaying] = useState(false);
 
     useEffect(() => {
         const fetchBloomEvents = async () => {
@@ -34,8 +39,82 @@ function Dashboard(){
             }
         };
 
+        const fetchNdviData = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/ndvi_data');
+                if (response.ok) {
+                    const data = await response.json();
+                    // Add dummy lat lng for demo
+                    const processed = data.map(d => ({ ...d, lat: 30.0 + Math.random() * 2, lng: 31.0 + Math.random() * 2 }));
+                    setNdviData(processed);
+                }
+            } catch (error) {
+                console.error('Error fetching NDVI data:', error);
+            }
+        };
+
+        const fetchSoilMoistureData = async () => {
+            // Dummy data for demo
+            const dummy = Array.from({ length: 100 }, (_, i) => ({
+                date: `2024-${String(Math.floor(i / 10) + 1).padStart(2, '0')}-01`,
+                value: Math.random() * 0.5,
+                lat: 30.0 + Math.random() * 2,
+                lng: 31.0 + Math.random() * 2
+            }));
+            setSoilMoistureData(dummy);
+        };
+
+        const fetchBloomData = async () => {
+            // Dummy bloom predictions
+            const dummy = Array.from({ length: 50 }, (_, i) => ({
+                date: `2024-${String(Math.floor(i / 5) + 1).padStart(2, '0')}-01`,
+                value: Math.random(),
+                lat: 30.0 + Math.random() * 2,
+                lng: 31.0 + Math.random() * 2
+            }));
+            setBloomData(dummy);
+        };
+
+        const fetchDesertificationData = async () => {
+            // Dummy desertification risk
+            const dummy = Array.from({ length: 50 }, (_, i) => ({
+                date: `2024-${String(Math.floor(i / 5) + 1).padStart(2, '0')}-01`,
+                value: Math.random(),
+                lat: 30.0 + Math.random() * 2,
+                lng: 31.0 + Math.random() * 2
+            }));
+            setDesertificationData(dummy);
+        };
+
         fetchBloomEvents();
+        fetchNdviData();
+        fetchSoilMoistureData();
+        fetchBloomData();
+        fetchDesertificationData();
     }, []);
+
+    useEffect(() => {
+        if (!isPlaying) return;
+
+        const interval = setInterval(() => {
+            setSelectedTime(prev => {
+                const [year, month] = prev.split('-').map(Number);
+                let newMonth = month + 1;
+                let newYear = year;
+                if (newMonth > 12) {
+                    newMonth = 1;
+                    newYear += 1;
+                }
+                if (newYear > 2024) {
+                    setIsPlaying(false);
+                    return '2024-12';
+                }
+                return `${newYear}-${String(newMonth).padStart(2, '0')}`;
+            });
+        }, 1000); // 1 second per month
+
+        return () => clearInterval(interval);
+    }, [isPlaying]);
 
     return(
         <div className={styles.dashboardContainer}>
@@ -53,7 +132,7 @@ function Dashboard(){
             {/* Core Visualization Zone */}
             <div className={styles.coreVisualizationZone}>
                 <div className={styles.mapContainer}>
-                    {loading ? <p>Loading bloom data...</p> : <Map bloomEvents={bloomEvents} animate={true} selectedTime={selectedTime}></Map>}
+                    {loading ? <p>Loading bloom data...</p> : <Map bloomEvents={bloomEvents} animate={true} selectedTime={selectedTime} ndviData={ndviData} soilMoistureData={soilMoistureData} bloomData={bloomData} desertificationData={desertificationData}></Map>}
                     <div className={styles.legend}>
                         <h4>Bloom Stage Legend</h4>
                         <div className={styles.legendItem}><span style={{backgroundColor: 'gray'}}></span> No Bloom</div>
@@ -73,7 +152,7 @@ function Dashboard(){
                             onChange={(e) => setSelectedTime(e.target.value)} 
                         />
                     </label>
-                    <button onClick={() => {/* Play animation logic */}}>Play/Pause</button>
+                    <button onClick={() => setIsPlaying(!isPlaying)}>{isPlaying ? 'Pause' : 'Play'}</button>
                 </div>
             </div>
 

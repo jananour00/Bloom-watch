@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 import os
 import json
+from datetime import datetime, timedelta
 
 # Load Earthdata token from environment variable
 EARTHDATA_TOKEN = os.getenv('EARTHDATA_TOKEN')
@@ -93,11 +94,106 @@ def fetch_ndvi_gee(lat, lon, start_date, end_date):
         print(f"GEE NDVI fetch failed: {e}")
         return None
 
+# Function to fetch MODIS NDVI/EVI from LP DAAC subset API
+def fetch_modis_ndvi(lat, lon, start_date, end_date):
+    """
+    Fetch NDVI and EVI for a point from MODIS MOD13Q1.
+    start_date, end_date: 'YYYY-MM-DD'
+    Returns DataFrame with date, NDVI, EVI
+    """
+    url = "https://lpdaacsvc.cr.usgs.gov/services/modisSubset"
+    params = {
+        "product": "MOD13Q1",
+        "version": "6",
+        "latitude": lat,
+        "longitude": lon,
+        "band": "NDVI,EVI",
+        "startDate": start_date,
+        "endDate": end_date,
+        "kmAboveBelow": "0",
+        "kmLeftRight": "0",
+        "output": "json"
+    }
+    headers = {"Authorization": f"Bearer {EARTHDATA_TOKEN}"}
+    response = requests.get(url, headers=headers, params=params)
+    if response.status_code == 200:
+        data = response.json()
+        records = []
+        for d in data['subset']:
+            records.append({
+                "date": d["calendar_date"],
+                "NDVI": d.get("NDVI"),
+                "EVI": d.get("EVI")
+            })
+        df = pd.DataFrame(records)
+        df['date'] = pd.to_datetime(df['date'])
+        return df
+    else:
+        raise Exception(f"Failed to fetch MODIS NDVI: {response.status_code} - {response.text}")
+
+# Function to fetch SMAP soil moisture from GES DISC
+def fetch_smap_soil_moisture(bbox, start_date, end_date):
+    """
+    Fetch SMAP L3 soil moisture for a bounding box.
+    bbox: "min_lat,min_lon,max_lat,max_lon"
+    Returns file path to NetCDF
+    """
+    url = "https://disc.gsfc.nasa.gov/daac-bin/OTF/HTTP_services.cgi"
+    params = {
+        "DATASET_ID": "SMAP_L3_SM_P_E",
+        "BBOX": bbox,
+        "TIME": f"{start_date}/{end_date}",
+        "FORMAT": "netCDF"
+    }
+    headers = {"Authorization": f"Bearer {EARTHDATA_TOKEN}"}
+    response = requests.get(url, headers=headers, params=params)
+    if response.status_code == 200:
+        filename = "smap_soil_moisture.nc"
+        with open(filename, "wb") as f:
+            f.write(response.content)
+        print(f"Saved SMAP data to {filename}")
+        return filename
+    else:
+        raise Exception(f"Failed to fetch SMAP: {response.status_code} - {response.text}")
+
+# Function to fetch GLDAS climate data from GES DISC
+def fetch_gldas_climate(bbox, start_date, end_date):
+    """
+    Fetch GLDAS NOAH025 3H climate data.
+    """
+    url = "https://disc.gsfc.nasa.gov/daac-bin/OTF/HTTP_services.cgi"
+    params = {
+        "DATASET_ID": "GLDAS_NOAH025_3H",
+        "BBOX": bbox,
+        "TIME": f"{start_date}/{end_date}",
+        "FORMAT": "netCDF"
+    }
+    headers = {"Authorization": f"Bearer {EARTHDATA_TOKEN}"}
+    response = requests.get(url, headers=headers, params=params)
+    if response.status_code == 200:
+        filename = "gldas_climate.nc"
+        with open(filename, "wb") as f:
+            f.write(response.content)
+        print(f"Saved GLDAS data to {filename}")
+        return filename
+    else:
+        raise Exception(f"Failed to fetch GLDAS: {response.status_code} - {response.text}")
+
 # Example usage
 if __name__ == "__main__":
-    # Fetch climate for Central Valley
-    lat, lon = 38.5, -121.5
-    start, end = "20200101", "20201231"
-    climate_df = fetch_climate_data(lat, lon, start, end)
-    climate_df.to_csv("climate_data.csv")
-    print("Climate data saved to climate_data.csv")
+    # Fetch NDVI for a point
+    lat, lon = 30.0, 31.2  # Cairo example
+    start = "2018-01-01"
+    end = "2024-12-31"
+    ndvi_df = fetch_modis_ndvi(lat, lon, start, end)
+    ndvi_df.to_csv("modis_ndvi_evi_2018_2024.csv", index=False)
+    print("NDVI data saved to modis_ndvi_evi_2018_2024.csv")
+
+    # Fetch SMAP for a bbox
+    bbox = "25,25,35,35"  # North Africa region
+    smap_file = fetch_smap_soil_moisture(bbox, start, end)
+    print(f"SMAP data saved to {smap_file}")
+
+    # Fetch GLDAS
+    gldas_file = fetch_gldas_climate(bbox, start, end)
+    print(f"GLDAS data saved to {gldas_file}")
