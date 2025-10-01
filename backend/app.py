@@ -11,6 +11,7 @@ from sklearn.preprocessing import MinMaxScaler
 import os
 import requests
 import plotly.express as px
+from fetch_nasa_data import fetch_ndvi_harmony, fetch_bloom_events_cmr
 
 app = Flask(__name__)
 CORS(app)
@@ -275,6 +276,35 @@ def bloom_prediction():
         'peak_bloom_day': peak_day
     }
     return jsonify(result)
+
+@app.route('/api/fetch_ndvi', methods=['GET'])
+def api_fetch_ndvi():
+    collection = request.args.get('collection', 'C1748066515-LPCLOUD')
+    variable = request.args.get('variable', 'NDVI')
+    minlat = request.args.get('minlat', '29.8')
+    minlon = request.args.get('minlon', '31.0')
+    maxlat = request.args.get('maxlat', '30.3')
+    maxlon = request.args.get('maxlon', '31.6')
+    start = request.args.get('start', '2024-03-01')
+    end = request.args.get('end', '2024-03-31')
+    format_type = request.args.get('format', 'json')
+    try:
+        data = fetch_ndvi_harmony(collection=collection, variable=variable, minlat=float(minlat), minlon=float(minlon), maxlat=float(maxlat), maxlon=float(maxlon), start=start, end=end, format=format_type)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/bloom_events', methods=['GET'])
+def api_bloom_events():
+    short_name = request.args.get('short_name', 'MOD13Q1')
+    start_date = request.args.get('start_date', '2024-01-01T00:00:00Z')
+    end_date = request.args.get('end_date', '2024-12-31T23:59:59Z')
+    bbox = request.args.get('bbox', '-180,-90,180,90')
+    try:
+        data = fetch_bloom_events_cmr(short_name=short_name, start_date=start_date, end_date=end_date, bbox=bbox)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # -------------------------------
 # 5️⃣ Run Flask app
