@@ -34,12 +34,12 @@ df_ndvi.sort_values('date', inplace=True)
 # -------------------------------
 # 2️⃣ Load LSTM model
 # -------------------------------
-model_path = "ndvi_climate_model1.h5"
-if not os.path.exists(model_path):
-    raise FileNotFoundError(f"Model file not found: {model_path}")
+# model_path = "ndvi_climate_model1.h5"
+# if not os.path.exists(model_path):
+#     raise FileNotFoundError(f"Model file not found: {model_path}")
 
-# Fix for older H5 metrics issue
-model = load_model(model_path, custom_objects={'mse': tf.keras.metrics.MeanSquaredError()})
+# # Fix for older H5 metrics issue
+# model = load_model(model_path, custom_objects={'mse': tf.keras.metrics.MeanSquaredError()})
 
 # -------------------------------
 # 3️⃣ Preprocess NDVI data
@@ -67,10 +67,11 @@ def home():
 @app.route('/predict', methods=['GET'])
 def predict():
     # Predict next NDVI
-    last_sequence = X_input[-1].reshape(1, seq_length, 1)
-    pred_scaled = model.predict(last_sequence)
-    pred_ndvi = scaler.inverse_transform(pred_scaled)
-    return jsonify({"predicted_ndvi": float(pred_ndvi[0, 0])})
+    # last_sequence = X_input[-1].reshape(1, seq_length, 1)
+    # pred_scaled = model.predict(last_sequence)
+    # pred_ndvi = scaler.inverse_transform(pred_scaled)
+    # return jsonify({"predicted_ndvi": float(pred_ndvi[0, 0])})
+    return jsonify({"predicted_ndvi": 0.5})  # Dummy
 
 @app.route('/data', methods=['GET'])
 def data():
@@ -357,10 +358,11 @@ def api_bloom_prediction():
     # Simple prediction using the LSTM model
     try:
         # Predict next NDVI
-        last_sequence = X_input[-1].reshape(1, seq_length, 1)
-        pred_scaled = model.predict(last_sequence)
-        pred_ndvi = scaler.inverse_transform(pred_scaled)
-        predicted_ndvi = float(pred_ndvi[0, 0])
+        # last_sequence = X_input[-1].reshape(1, seq_length, 1)
+        # pred_scaled = model.predict(last_sequence)
+        # pred_ndvi = scaler.inverse_transform(pred_scaled)
+        # predicted_ndvi = float(pred_ndvi[0, 0])
+        predicted_ndvi = 0.5
 
         # Generate dummy dates for next 12 months
         from datetime import datetime, timedelta
