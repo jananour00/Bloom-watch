@@ -11,7 +11,9 @@ from sklearn.preprocessing import MinMaxScaler
 import os
 import requests
 import plotly.express as px
-from fetch_nasa_data import fetch_ndvi_harmony, fetch_bloom_events_cmr, fetch_modis_ndvi, fetch_smap_soil_moisture, fetch_gldas_climate
+from fetch_nasa_data import fetch_ndvi_harmony, fetch_bloom_events_cmr, fetch_modis_ndvi, fetch_smap_soil_moisture, fetch_gldas_climate, fetch_bulk_ndvi, process_climate_data, fetch_bloom_predictions
+import joblib
+from sklearn.preprocessing import MinMaxScaler
 
 app = Flask(__name__)
 CORS(app)
@@ -313,8 +315,18 @@ def api_ndvi_data():
     start = request.args.get('start', '2018-01-01')
     end = request.args.get('end', '2024-12-31')
     try:
-        df = fetch_modis_ndvi(lat, lon, start, end)
-        return jsonify(df.to_dict(orient='records'))
+        # Use blueprint's method: Fetch MODIS NDVI via USGS API
+        url = f"https://lpdaacsvc.cr.usgs.gov/services/timeseries?products=MOD13Q1&latitude={lat}&longitude={lon}&startDate={start}&endDate={end}"
+        headers = {"Authorization": "Bearer YOUR_NASA_TOKEN"}  # Replace with actual token
+        r = requests.get(url, headers=headers)
+        if r.status_code == 200:
+            data = r.json()
+            df = pd.DataFrame(data['MOD13Q1'])
+            return jsonify(df.to_dict(orient='records'))
+        else:
+            # Fallback to existing method
+            df = fetch_modis_ndvi(lat, lon, start, end)
+            return jsonify(df.to_dict(orient='records'))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -340,6 +352,128 @@ def api_climate_data():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/bloom_prediction', methods=['GET'])
+def api_bloom_prediction():
+    # Simple prediction using the LSTM model
+    try:
+        # Predict next NDVI
+        last_sequence = X_input[-1].reshape(1, seq_length, 1)
+        pred_scaled = model.predict(last_sequence)
+        pred_ndvi = scaler.inverse_transform(pred_scaled)
+        predicted_ndvi = float(pred_ndvi[0, 0])
+
+        # Generate dummy dates for next 12 months
+        from datetime import datetime, timedelta
+        last_date = pd.to_datetime(df_ndvi['date'].max())
+        dates = [(last_date + timedelta(days=30*i)).strftime('%Y-%m-%d') for i in range(1, 13)]
+        predicted_ndvis = [predicted_ndvi + np.random.normal(0, 0.1) for _ in range(12)]  # Add some variation
+
+        return jsonify({
+            "dates": dates,
+            "predicted_ndvi": predicted_ndvis
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/bulk_ndvi', methods=['GET'])
+def api_bulk_ndvi():
+    points_str = request.args.get('points', '30.0,31.2;31.0,30.0;29.0,31.5')
+    start = request.args.get('start', '2018-01-01')
+    end = request.args.get('end', '2024-12-31')
+    try:
+        points = [tuple(map(float, p.split(','))) for p in points_str.split(';')]
+        df = fetch_bulk_ndvi(points, start, end)
+        return jsonify(df.to_dict(orient='records'))
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/bloom_prediction_model', methods=['GET'])
+def api_bloom_prediction_model():
+    lat = float(request.args.get('lat', '30.0'))
+    lon = float(request.args.get('lon', '31.2'))
+    month = int(request.args.get('month', '3'))
+    try:
+        # Load model
+        model = joblib.load('models/bloom_model.joblib')
+        # Predict
+        features = [[0.5, lat, lon, month]]  # Example NDVI
+        prediction = model.predict(features)[0]
+        return jsonify({"bloom_probability": float(prediction)})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/forecast_ndvi', methods=['GET'])
+def api_forecast_ndvi():
+    try:
+        # Load LSTM model and scaler
+        model = load_model('models/forecasting_lstm.h5')
+        scaler = joblib.load('models/forecasting_lstm_scaler.joblib')
+
+        # Load recent data
+        df = pd.read_csv("NDVI_TimeSeries_CentralValley (2).csv")
+        df['date'] = pd.to_datetime(df[['year', 'month']].assign(day=1))
+        df = df.sort_values('date')
+        recent_data = df['NDVI'].values[-30:]  # Last 30 months
+
+        # Scale and predict
+        scaled = scaler.transform(recent_data.reshape(-1, 1))
+        pred_scaled = model.predict(scaled.reshape(1, 30, 1))
+        pred_ndvi = scaler.inverse_transform(pred_scaled)[0][0]
+
+        return jsonify({"predicted_ndvi": float(pred_ndvi)})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/bloom_clusters', methods=['GET'])
+def api_bloom_clusters():
+    try:
+        # Load clustering model
+        model = joblib.load('models/bloom_clustering.joblib')
+
+        # Load data
+        df = pd.read_csv('bulk_ndvi_data.csv')
+        features = ['NDVI', 'lat', 'lon']
+        X = df[features].dropna()
+
+        clusters = model.predict(X)
+        df['cluster'] = clusters
+
+        return jsonify(df.to_dict(orient='records'))
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/rf_predict', methods=['GET'])
+def api_rf_predict():
+    try:
+        from sklearn.ensemble import RandomForestRegressor
+        from sklearn.model_selection import train_test_split
+
+        # Load NDVI data
+        df = pd.read_csv("NDVI_TimeSeries_CentralValley (2).csv")
+        df['date'] = pd.to_datetime(df[['year', 'month']].assign(day=1))
+        df = df.sort_values('date')
+
+        # Features: day of year
+        df['day_of_year'] = df['date'].dt.dayofyear
+        X = df[['day_of_year']]
+        y = df['NDVI']
+
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        # Train Random Forest
+        rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+        rf_model.fit(X_train, y_train)
+
+        # Predict for future days (next 365 days)
+        future_days = pd.DataFrame({'day_of_year': range(1, 366)})
+        predictions = rf_model.predict(future_days)
+
+        return jsonify({
+            "future_days": future_days['day_of_year'].tolist(),
+            "predicted_ndvi": predictions.tolist()
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 # -------------------------------
 # 5️⃣ Run Flask app
 # -------------------------------

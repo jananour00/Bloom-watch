@@ -11,3 +11,5 @@ python-dotenv==1.0.0
 plotly==5.18.0
 shap==0.41.0
 tensorflow==2.13.0
+flask==2.3.3
+flask-cors==4.0.0

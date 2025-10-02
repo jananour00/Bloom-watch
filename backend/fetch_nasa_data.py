@@ -179,6 +179,60 @@ def fetch_gldas_climate(bbox, start_date, end_date):
     else:
         raise Exception(f"Failed to fetch GLDAS: {response.status_code} - {response.text}")
 
+# Function to fetch and save NDVI data for multiple points
+def fetch_bulk_ndvi(points, start, end, output_file="bulk_ndvi_data.csv"):
+    """
+    Fetch NDVI data for multiple lat/lon points and save to CSV.
+    points: list of (lat, lon) tuples
+    """
+    all_data = []
+    for lat, lon in points:
+        try:
+            df = fetch_modis_ndvi(lat, lon, start, end)
+            df['lat'] = lat
+            df['lon'] = lon
+            all_data.append(df)
+            print(f"Fetched NDVI for {lat}, {lon}")
+        except Exception as e:
+            print(f"Error fetching for {lat}, {lon}: {e}")
+    if all_data:
+        combined_df = pd.concat(all_data, ignore_index=True)
+        combined_df.to_csv(output_file, index=False)
+        print(f"Bulk NDVI data saved to {output_file}")
+        return combined_df
+    return pd.DataFrame()
+
+# Function to process and save climate data
+def process_climate_data(lat, lon, start, end, output_file="climate_data_processed.csv"):
+    """
+    Fetch and process climate data from NASA POWER API.
+    """
+    try:
+        df = fetch_climate_data(lat, lon, start, end)
+        df.to_csv(output_file)
+        print(f"Climate data saved to {output_file}")
+        return df
+    except Exception as e:
+        print(f"Error fetching climate data: {e}")
+        return pd.DataFrame()
+
+# Function to fetch and save bloom prediction data
+def fetch_bloom_predictions(lat, lon, start, end, output_file="bloom_predictions.csv"):
+    """
+    Fetch bloom-related data and save predictions.
+    """
+    # For now, use NDVI as proxy for bloom
+    try:
+        df = fetch_modis_ndvi(lat, lon, start, end)
+        # Simple bloom detection: high NDVI increase
+        df['bloom_probability'] = (df['NDVI'] > 0.3).astype(int)
+        df.to_csv(output_file, index=False)
+        print(f"Bloom predictions saved to {output_file}")
+        return df
+    except Exception as e:
+        print(f"Error fetching bloom data: {e}")
+        return pd.DataFrame()
+
 # Example usage
 if __name__ == "__main__":
     # Fetch NDVI for a point
@@ -188,6 +242,16 @@ if __name__ == "__main__":
     ndvi_df = fetch_modis_ndvi(lat, lon, start, end)
     ndvi_df.to_csv("modis_ndvi_evi_2018_2024.csv", index=False)
     print("NDVI data saved to modis_ndvi_evi_2018_2024.csv")
+
+    # Fetch bulk NDVI for multiple points
+    points = [(30.0, 31.2), (31.0, 30.0), (29.0, 31.5)]  # Example points
+    fetch_bulk_ndvi(points, start, end)
+
+    # Fetch climate data
+    process_climate_data(lat, lon, start, end)
+
+    # Fetch bloom predictions
+    fetch_bloom_predictions(lat, lon, start, end)
 
     # Fetch SMAP for a bbox
     bbox = "25,25,35,35"  # North Africa region
