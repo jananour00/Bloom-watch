@@ -11,6 +11,7 @@ function Dashboard(){
     const [soilMoistureData, setSoilMoistureData] = useState([]);
     const [bloomData, setBloomData] = useState([]);
     const [desertificationData, setDesertificationData] = useState([]);
+    const [timeSeriesData, setTimeSeriesData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedTime, setSelectedTime] = useState('2024-03'); // YYYY-MM
     const [isPlaying, setIsPlaying] = useState(false);
@@ -86,11 +87,24 @@ function Dashboard(){
             setDesertificationData(dummy);
         };
 
+        const fetchTimeSeriesData = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/ndvi_data?start=2020-01-01&end=2024-12-31');
+                if (response.ok) {
+                    const data = await response.json();
+                    setTimeSeriesData(data);
+                }
+            } catch (error) {
+                console.error('Error fetching time series data:', error);
+            }
+        };
+
         fetchBloomEvents();
         fetchNdviData();
         fetchSoilMoistureData();
         fetchBloomData();
         fetchDesertificationData();
+        fetchTimeSeriesData();
     }, []);
 
     useEffect(() => {
