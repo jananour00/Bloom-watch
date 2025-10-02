@@ -84,6 +84,32 @@
   gap: 1rem;
 }
 
+.secondaryMapZone {
+  min-height: 50vh;
+  width: 100%;
+  scroll-snap-align: start;
+  padding: 2rem;
+  background-color: #e8f5e8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.secondaryMapZone h2 {
+  color: #2e7d32;
+  font-family: sans-serif;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.secondaryMapContainer {
+  position: relative;
+  width: 90%;
+  height: 300px;
+  margin-bottom: 1rem;
+}
+
 .dataAnalysisZone {
   min-height: 40vh;
   width: 100%;
@@ -142,10 +168,10 @@
         gap: 1rem;
         width: 100%;
     }
-    .coreVisualizationZone, .dataAnalysisZone, .predictiveModelingZone {
+    .coreVisualizationZone, .secondaryMapZone, .dataAnalysisZone, .predictiveModelingZone {
         padding: 1rem;
     }
-    .mapContainer {
+    .mapContainer, .secondaryMapContainer {
         width: 100%;
         height: 300px;
     }
