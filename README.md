@@ -63,3 +63,4 @@ Copy `.env.example` to `.env` and set:
 - Add caching (Redis) for predictions.
 - Include climate data (NASA POWER) in features.
 - Add SHAP explanations for model interpretability.
+https://drive.google.com/file/d/1lB082qf58nR4U5wNMaXb_MniMjC5-dzG/view?usp=sharing
