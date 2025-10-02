@@ -94,6 +94,7 @@ function Storytelling() {
     const [animationFrame, setAnimationFrame] = useState(0);
     const [animationSpeed, setAnimationSpeed] = useState(250);
     const [selectedVariable, setSelectedVariable] = useState('NDVI');
+    const [viewMode, setViewMode] = useState('timeline');
 
 
     // --- Data Fetching ---
@@ -188,6 +189,13 @@ function Storytelling() {
         return () => clearInterval(intervalId);
     }, [isPlaying, dateRange, animationSpeed]);
 
+    // Stop playing when switching to heatmap
+    useEffect(() => {
+        if (viewMode === 'heatmap') {
+            setIsPlaying(false);
+        }
+    }, [viewMode]);
+
 
     // --- Data Filtering for the Map (Now much faster) ---
     const displayedBloomEvents = useMemo(() => {
@@ -219,9 +227,9 @@ function Storytelling() {
     return (
         <div className={styles.storyContainer}>
             <div className={styles.visualization}>
-                <Map 
-                    bloomEvents={displayedBloomEvents} 
-                    animate={!isPlaying} 
+                <Map
+                    bloomEvents={viewMode === 'timeline' ? displayedBloomEvents : allTransformedBloomEvents}
+                    animate={!isPlaying}
                     // NEW: Pass the calculated max value to the Map
                     maxHeatmapValue={variableMaxValues[selectedVariable]}
                 />
@@ -241,29 +249,39 @@ function Storytelling() {
                                 </label>
                             ))}
                         </div>
-                        <button onClick={() => setIsPlaying(!isPlaying)}>
-                            {isPlaying ? "Pause" : "Play Animation"}
-                        </button>
-                        {isPlaying && <span className={styles.animationStatus}>Showing: {dateLabels[animationFrame]}</span>}
-                        <div className={styles.speedControl}>
-                            <label htmlFor="speed">Speed</label>
-                            <input
-                                type="range"
-                                id="speed"
-                                min="50"
-                                max="1000"
-                                step="50"
-                                value={animationSpeed}
-                                onChange={(e) => setAnimationSpeed(Number(e.target.value))}
-                            />
-                        </div>
+                        <select value={viewMode} onChange={(e) => setViewMode(e.target.value)}>
+                            <option value="timeline">Timeline Animation</option>
+                            <option value="heatmap">Heatmap All Time</option>
+                        </select>
+                        {viewMode === 'timeline' && (
+                            <>
+                                <button onClick={() => setIsPlaying(!isPlaying)}>
+                                    {isPlaying ? "Pause" : "Play Animation"}
+                                </button>
+                                {isPlaying && <span className={styles.animationStatus}>Showing: {dateLabels[animationFrame]}</span>}
+                                <div className={styles.speedControl}>
+                                    <label htmlFor="speed">Speed</label>
+                                    <input
+                                        type="range"
+                                        id="speed"
+                                        min="50"
+                                        max="1000"
+                                        step="50"
+                                        value={animationSpeed}
+                                        onChange={(e) => setAnimationSpeed(Number(e.target.value))}
+                                    />
+                                </div>
+                            </>
+                        )}
                     </div>
-                    <RangeSlider
-                        labels={dateLabels}
-                        minValue={dateRange.min}
-                        maxValue={dateRange.max}
-                        onRangeChange={handleRangeChange}
-                    />
+                    {viewMode === 'timeline' && (
+                        <RangeSlider
+                            labels={dateLabels}
+                            minValue={dateRange.min}
+                            maxValue={dateRange.max}
+                            onRangeChange={handleRangeChange}
+                        />
+                    )}
                 </div>
             </div>
             <div className={styles.narrative}>

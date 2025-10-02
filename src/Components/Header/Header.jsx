@@ -54,7 +54,7 @@ function Header() {
             </NavLink>
           </li>
           <li className={styles.navItem}>
-            <NavLink to="/DataExplorer" className={({isActive}) => (isActive ? styles.ActiveLink: "")} onClick={() => setMobileMenuOpen(false)}>
+            <NavLink to="/ExploreData" className={({isActive}) => (isActive ? styles.ActiveLink: "")} onClick={() => setMobileMenuOpen(false)}>
               Data Explorer
             </NavLink>
           </li>
