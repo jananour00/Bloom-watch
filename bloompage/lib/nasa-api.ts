@@ -1,26 +1,48 @@
 import type { BloomData, VegetationIndex, ClimateData } from "./types"
 
-const APPEEARS_API = "https://lpdaacsvc.cr.usgs.gov/appeears/api"
+const NASA_POWER_BASE_URL = "https://power.larc.nasa.gov/api/temporal/daily/point"
 
 export async function fetchNDVIData(
   bbox: [number, number, number, number],
   startDate: string,
   endDate: string,
 ): Promise<VegetationIndex[]> {
-  // Mock data for demonstration - in production, this would call AppEEARS API
-  const mockData: VegetationIndex[] = []
-  const start = new Date(startDate)
-  const end = new Date(endDate)
+  // Calculate center of bbox for point query
+  const lat = (bbox[0] + bbox[2]) / 2
+  const lon = (bbox[1] + bbox[3]) / 2
 
-  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 7)) {
-    mockData.push({
-      date: d.toISOString().split("T")[0],
-      value: 0.3 + Math.random() * 0.5,
-      type: "NDVI",
-    })
+  const params = {
+    start: startDate.replace(/-/g, ''),
+    end: endDate.replace(/-/g, ''),
+    latitude: lat.toString(),
+    longitude: lon.toString(),
+    parameters: "NDVI",
+    community: "AG",
+    format: "JSON"
   }
 
-  return mockData
+  try {
+    const response = await fetch(`${NASA_POWER_BASE_URL}?${new URLSearchParams(params)}`)
+    if (!response.ok) {
+      throw new Error(`NASA POWER API error: ${response.status}`)
+    }
+
+    const data = await response.json()
+    const ndviData: VegetationIndex[] = []
+
+    for (const [date, value] of Object.entries(data.properties.parameter.NDVI)) {
+      ndviData.push({
+        date: date.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3'),
+        value: value as number,
+        type: "NDVI",
+      })
+    }
+
+    return ndviData
+  } catch (error) {
+    console.error("Error fetching NDVI data:", error)
+    return []
+  }
 }
 
 export async function fetchClimateData(
@@ -28,21 +50,44 @@ export async function fetchClimateData(
   startDate: string,
   endDate: string,
 ): Promise<ClimateData[]> {
-  // Mock data for demonstration
-  const mockData: ClimateData[] = []
-  const start = new Date(startDate)
-  const end = new Date(endDate)
+  // Calculate center of bbox for point query
+  const lat = (bbox[0] + bbox[2]) / 2
+  const lon = (bbox[1] + bbox[3]) / 2
 
-  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 7)) {
-    mockData.push({
-      date: d.toISOString().split("T")[0],
-      temperature: 15 + Math.random() * 15,
-      precipitation: Math.random() * 50,
-      soilMoisture: 0.2 + Math.random() * 0.3,
-    })
+  const params = {
+    start: startDate.replace(/-/g, ''),
+    end: endDate.replace(/-/g, ''),
+    latitude: lat.toString(),
+    longitude: lon.toString(),
+    parameters: "T2M_MAX,T2M_MIN,PRECTOTCORR,RH2M",
+    community: "AG",
+    format: "JSON"
   }
 
-  return mockData
+  try {
+    const response = await fetch(`${NASA_POWER_BASE_URL}?${new URLSearchParams(params)}`)
+    if (!response.ok) {
+      throw new Error(`NASA POWER API error: ${response.status}`)
+    }
+
+    const data = await response.json()
+    const climateData: ClimateData[] = []
+
+    const dates = Object.keys(data.properties.parameter.T2M_MAX)
+    for (const date of dates) {
+      climateData.push({
+        date: date.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3'),
+        temperature: data.properties.parameter.T2M_MAX[date],
+        precipitation: data.properties.parameter.PRECTOTCORR[date],
+        soilMoisture: 0.25, // Not available in POWER, placeholder
+      })
+    }
+
+    return climateData
+  } catch (error) {
+    console.error("Error fetching climate data:", error)
+    return []
+  }
 }
 
 export async function fetchBloomData(region: string, startDate: string, endDate: string): Promise<BloomData[]> {

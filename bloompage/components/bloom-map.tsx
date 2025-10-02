@@ -1,10 +1,17 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState, useRef } from "react"
+import dynamic from "next/dynamic"
 import type { BloomData } from "@/lib/types"
 import { Card } from "@/components/ui/card"
 import { Layers, ZoomIn, ZoomOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
+
+// Dynamically import Leaflet components to avoid SSR issues
+const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
+const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false })
+const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false })
+const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false })
 
 interface BloomMapProps {
   data: BloomData[]
@@ -13,135 +20,107 @@ interface BloomMapProps {
 }
 
 export function BloomMap({ data, selectedLayers, onLayerToggle }: BloomMapProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [zoom, setZoom] = useState(1)
-  const [center, setCenter] = useState({ lat: 0, lon: 20 })
+  const [L, setL] = useState<any>(null)
+  const mapRef = useRef<any>(null)
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
-
-    // Set canvas size
-    canvas.width = canvas.offsetWidth
-    canvas.height = canvas.offsetHeight
-
-    // Clear canvas
-    ctx.fillStyle = "#1a1a2e"
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-    // Draw grid
-    ctx.strokeStyle = "#2a2a3e"
-    ctx.lineWidth = 1
-    for (let i = 0; i < canvas.width; i += 50) {
-      ctx.beginPath()
-      ctx.moveTo(i, 0)
-      ctx.lineTo(i, canvas.height)
-      ctx.stroke()
-    }
-    for (let i = 0; i < canvas.height; i += 50) {
-      ctx.beginPath()
-      ctx.moveTo(0, i)
-      ctx.lineTo(canvas.width, i)
-      ctx.stroke()
-    }
-
-    // Project lat/lon to canvas coordinates
-    const project = (lat: number, lon: number) => {
-      const x = ((lon - center.lon + 180) / 360) * canvas.width * zoom + canvas.width / 2
-      const y = ((center.lat - lat + 90) / 180) * canvas.height * zoom + canvas.height / 2
-      return { x, y }
-    }
-
-    // Draw bloom points
-    data.forEach((point) => {
-      const { x, y } = project(point.lat, point.lon)
-
-      if (x < 0 || x > canvas.width || y < 0 || y > canvas.height) return
-
-      // Color based on bloom stage
-      let color = "#4a5568"
-      if (selectedLayers.includes("bloom-stage")) {
-        switch (point.bloomStage) {
-          case "Pre-bloom":
-            color = "#718096"
-            break
-          case "Onset":
-            color = "#48bb78"
-            break
-          case "Peak":
-            color = "#38b2ac"
-            break
-          case "Decline":
-            color = "#ed8936"
-            break
-          case "Post-bloom":
-            color = "#e53e3e"
-            break
-        }
-      }
-
-      // Size based on intensity
-      let radius = 4
-      if (selectedLayers.includes("bloom-intensity")) {
-        switch (point.bloomIntensity) {
-          case "Mild":
-            radius = 3
-            break
-          case "Moderate":
-            radius = 5
-            break
-          case "Peak":
-            radius = 7
-            break
-        }
-      }
-
-      // Draw point
-      ctx.beginPath()
-      ctx.arc(x, y, radius, 0, Math.PI * 2)
-      ctx.fillStyle = color
-      ctx.fill()
-
-      // Add glow effect for peak blooms
-      if (point.bloomStage === "Peak") {
-        ctx.beginPath()
-        ctx.arc(x, y, radius + 3, 0, Math.PI * 2)
-        ctx.strokeStyle = color
-        ctx.lineWidth = 2
-        ctx.globalAlpha = 0.3
-        ctx.stroke()
-        ctx.globalAlpha = 1
-      }
+    // Load Leaflet only on client side
+    import('leaflet').then((leaflet) => {
+      setL(leaflet.default)
     })
+  }, [])
 
-    // Draw NDVI heatmap overlay if selected
-    if (selectedLayers.includes("ndvi")) {
-      ctx.globalAlpha = 0.4
-      data.forEach((point) => {
-        const { x, y } = project(point.lat, point.lon)
-        if (x < 0 || x > canvas.width || y < 0 || y > canvas.height) return
+  if (!L) {
+    return <div className="h-full w-full flex items-center justify-center">Loading map...</div>
+  }
 
-        const intensity = Math.floor(point.ndvi * 255)
-        ctx.fillStyle = `rgb(${255 - intensity}, ${intensity}, 50)`
-        ctx.fillRect(x - 10, y - 10, 20, 20)
-      })
-      ctx.globalAlpha = 1
+  // Custom icon for bloom markers
+  const createBloomIcon = (stage: string, intensity: string) => {
+    let color = "#4a5568"
+    if (selectedLayers.includes("bloom-stage")) {
+      switch (stage) {
+        case "Pre-bloom":
+          color = "#718096"
+          break
+        case "Onset":
+          color = "#48bb78"
+          break
+        case "Peak":
+          color = "#38b2ac"
+          break
+        case "Decline":
+          color = "#ed8936"
+          break
+        case "Post-bloom":
+          color = "#e53e3e"
+          break
+      }
     }
-  }, [data, selectedLayers, zoom, center])
+
+    let size = 8
+    if (selectedLayers.includes("bloom-intensity")) {
+      switch (intensity) {
+        case "Mild":
+          size = 6
+          break
+        case "Moderate":
+          size = 10
+          break
+        case "Peak":
+          size = 12
+          break
+      }
+    }
+
+    return L.divIcon({
+      html: `<div style="background-color: ${color}; width: ${size}px; height: ${size}px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.5);"></div>`,
+      className: 'custom-bloom-icon',
+      iconSize: [size, size],
+      iconAnchor: [size/2, size/2]
+    })
+  }
 
   return (
     <div className="relative h-full w-full">
-      <canvas ref={canvasRef} className="h-full w-full rounded-lg" />
+      <MapContainer
+        center={[20, 0]}
+        zoom={2}
+        style={{ height: '100%', width: '100%' }}
+        ref={mapRef}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        {data.map((point, index) => (
+          <Marker
+            key={index}
+            position={[point.lat, point.lon]}
+            icon={createBloomIcon(point.bloomStage, point.bloomIntensity)}
+          >
+            <Popup>
+              <div className="p-2">
+                <h3 className="font-bold">{point.region}</h3>
+                <p><strong>Date:</strong> {point.date}</p>
+                <p><strong>Stage:</strong> {point.bloomStage}</p>
+                <p><strong>Intensity:</strong> {point.bloomIntensity}</p>
+                <p><strong>NDVI:</strong> {point.ndvi.toFixed(3)}</p>
+                <p><strong>EVI:</strong> {point.evi.toFixed(3)}</p>
+                <p><strong>Temperature:</strong> {point.temperature.toFixed(1)}°C</p>
+                <p><strong>Precipitation:</strong> {point.precipitation.toFixed(1)}mm</p>
+                <p><strong>Soil Moisture:</strong> {point.soilMoisture.toFixed(3)}</p>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
 
       {/* Zoom controls */}
       <div className="absolute right-4 top-4 flex flex-col gap-2">
         <Button
           size="icon"
           variant="secondary"
-          onClick={() => setZoom((z) => Math.min(z + 0.2, 3))}
+          onClick={() => mapRef.current?.leafletElement.zoomIn()}
           className="bg-card/90 backdrop-blur"
         >
           <ZoomIn className="h-4 w-4" />
@@ -149,7 +128,7 @@ export function BloomMap({ data, selectedLayers, onLayerToggle }: BloomMapProps)
         <Button
           size="icon"
           variant="secondary"
-          onClick={() => setZoom((z) => Math.max(z - 0.2, 0.5))}
+          onClick={() => mapRef.current?.leafletElement.zoomOut()}
           className="bg-card/90 backdrop-blur"
         >
           <ZoomOut className="h-4 w-4" />
