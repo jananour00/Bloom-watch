@@ -1,0 +1,154 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Off-white background with dark pink text and buttons */
+  --background: oklch(0.98 0.005 40); /* Off-white/cream background */
+  --foreground: oklch(0.35 0.15 340); /* Dark pink text */
+  --card: oklch(0.99 0.003 40); /* Very light card background */
+  --card-foreground: oklch(0.35 0.15 340); /* Dark pink text on cards */
+  --popover: oklch(0.99 0.003 40);
+  --popover-foreground: oklch(0.35 0.15 340);
+  --primary: oklch(0.45 0.2 340); /* Dark pink for buttons */
+  --primary-foreground: oklch(0.98 0.005 40); /* Off-white text on buttons */
+  --secondary: oklch(0.95 0.01 340); /* Light pink secondary */
+  --secondary-foreground: oklch(0.35 0.15 340); /* Dark pink text */
+  --muted: oklch(0.96 0.008 340); /* Muted light pink */
+  --muted-foreground: oklch(0.5 0.12 340); /* Medium pink for muted text */
+  --accent: oklch(0.55 0.22 340); /* Medium-dark pink accent */
+  --accent-foreground: oklch(0.98 0.005 40); /* Off-white on accent */
+  --destructive: oklch(0.5 0.22 20); /* Red for destructive actions */
+  --destructive-foreground: oklch(0.98 0.005 40);
+  --border: oklch(0.88 0.02 340); /* Light pink border */
+  --input: oklch(0.88 0.02 340); /* Light pink input border */
+  --ring: oklch(0.45 0.2 340); /* Dark pink focus ring */
+  --chart-1: oklch(0.45 0.2 340); /* Dark pink */
+  --chart-2: oklch(0.5 0.18 320); /* Rose */
+  --chart-3: oklch(0.55 0.22 350); /* Magenta */
+  --chart-4: oklch(0.4 0.18 300); /* Purple-pink */
+  --chart-5: oklch(0.6 0.2 10); /* Coral */
+  --radius: 0.75rem;
+  --sidebar: oklch(0.96 0.008 340); /* Light pink sidebar */
+  --sidebar-foreground: oklch(0.35 0.15 340); /* Dark pink text */
+  --sidebar-primary: oklch(0.45 0.2 340); /* Dark pink primary */
+  --sidebar-primary-foreground: oklch(0.98 0.005 40);
+  --sidebar-accent: oklch(0.93 0.015 340); /* Slightly darker pink accent */
+  --sidebar-accent-foreground: oklch(0.35 0.15 340);
+  --sidebar-border: oklch(0.88 0.02 340);
+  --sidebar-ring: oklch(0.45 0.2 340);
+}
+
+.dark {
+  /* Dark mode with darker backgrounds but maintaining pink theme */
+  --background: oklch(0.15 0.04 340);
+  --foreground: oklch(0.98 0.01 340);
+  --card: oklch(0.18 0.05 340);
+  --card-foreground: oklch(0.98 0.01 340);
+  --popover: oklch(0.18 0.05 340);
+  --popover-foreground: oklch(0.98 0.01 340);
+  --primary: oklch(0.65 0.25 340);
+  --primary-foreground: oklch(0.15 0.04 340);
+  --secondary: oklch(0.25 0.06 340);
+  --secondary-foreground: oklch(0.98 0.01 340);
+  --muted: oklch(0.22 0.05 340);
+  --muted-foreground: oklch(0.7 0.03 340);
+  --accent: oklch(0.55 0.28 320);
+  --accent-foreground: oklch(0.98 0.01 340);
+  --destructive: oklch(0.55 0.25 20);
+  --destructive-foreground: oklch(0.98 0.01 340);
+  --border: oklch(0.28 0.06 340);
+  --input: oklch(0.28 0.06 340);
+  --ring: oklch(0.65 0.25 340);
+  --chart-1: oklch(0.65 0.25 340);
+  --chart-2: oklch(0.6 0.22 320);
+  --chart-3: oklch(0.7 0.2 350);
+  --chart-4: oklch(0.55 0.28 300);
+  --chart-5: oklch(0.6 0.24 10);
+  --sidebar: oklch(0.12 0.04 340);
+  --sidebar-foreground: oklch(0.98 0.01 340);
+  --sidebar-primary: oklch(0.65 0.25 340);
+  --sidebar-primary-foreground: oklch(0.15 0.04 340);
+  --sidebar-accent: oklch(0.22 0.05 340);
+  --sidebar-accent-foreground: oklch(0.98 0.01 340);
+  --sidebar-border: oklch(0.28 0.06 340);
+  --sidebar-ring: oklch(0.65 0.25 340);
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Added Leaflet map styles */
+@layer components {
+  .leaflet-container {
+    @apply bg-background;
+  }
+
+  .leaflet-popup-content-wrapper {
+    @apply bg-card text-card-foreground rounded-lg shadow-lg;
+  }
+
+  .leaflet-popup-tip {
+    @apply bg-card;
+  }
+
+  .leaflet-control-zoom a {
+    @apply bg-card text-foreground border-border;
+  }
+
+  .leaflet-control-zoom a:hover {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  .leaflet-control-attribution {
+    @apply bg-card/80 text-muted-foreground text-xs;
+  }
+}
